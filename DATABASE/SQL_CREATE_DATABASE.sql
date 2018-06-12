@@ -1,4 +1,4 @@
-CREATE TABLE fanatic(
+ CREATE TABLE fanatic(
 	fanatic_login		varchar(8) PRIMARY KEY NOT NULL,
 	fanatic_id			INT IDENTITY(1,1) NOT NULL,
 	fanatic_name		varchar(30) NOT NULL, 
@@ -64,6 +64,17 @@ CREATE TABLE live(
 	live_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	live_start DATETIME NOT NULL,
 	live_end DATETIME NOT NULL
+);
+
+CREATE TABLE admin(
+	admin_id int identity(1,1) not null,
+	admin_username varchar(8) primary key not null,
+	admin_name varchar(30) not null,
+	admin_last_name varchar(30) not null,
+	admin_email varchar(255) not null,
+	admin_date_create DATETIME not null,
+	admin_password varchar(344) not null,
+	admin_private_key varchar(1616) not null
 );
 
 CREATE TABLE grouptournament(
@@ -188,3 +199,11 @@ create table userxlive(
 	livexmatch_id int foreign key references livexmatch(livexmatch_id),
 	userxinfo_id int foreign key references userxinfo(userxinfo_id)
 );
+
+create table adminxinfo(
+	adminxinfo_id int identity(1,1) primary key not null,
+	admin_username varchar(8) foreign key references admin(admin_username),
+	user_type_id int foreign key references user_type(user_type_id)
+);
+
+insert into user_type values (1,'Administrator'),(2,'Fanatic');

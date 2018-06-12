@@ -206,8 +206,17 @@ create table adminxinfo(
 	user_type_id int foreign key references user_type(user_type_id)
 );
 
-alter table userxfantasy drop constraint FK__userxfant__playe__72C60C4A;
-alter table userxfantasy drop column playerxstats_id;
-alter table userxfantasy add playerxinfo_id int foreign key references playerxinfo(playerxinfo_id);
+create table eventmatch(
+	action_id int identity(1,1) primary key not null,
+	action_name varchar(255) not null,
+	action_value int not null
+);
+
+create table livexaction(
+	livexaction_id int identity(1,1) primary key not null,
+	action_id int foreign key references eventmatch(action_id),
+	live_id int foreign key references live(live_id),
+	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id)
+);
 
 insert into user_type values (1,'Administrator'),(2,'Fanatic');

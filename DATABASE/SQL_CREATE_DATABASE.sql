@@ -138,7 +138,7 @@ create table playerxstats(
 create table userxfantasy(
 	userxfantasy_id int identity(1,1) primary key not null,
 	userxinfo_id int foreign key references userxinfo(userxinfo_id),
-	playerxstats_id int foreign key references playerxstats(playerxstats_id),
+	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id),
 	tournament_id int foreign key references tournament(tournament_id)
 );
 
@@ -205,5 +205,9 @@ create table adminxinfo(
 	admin_username varchar(8) foreign key references admin(admin_username),
 	user_type_id int foreign key references user_type(user_type_id)
 );
+
+alter table userxfantasy drop constraint FK__userxfant__playe__72C60C4A;
+alter table userxfantasy drop column playerxstats_id;
+alter table userxfantasy add playerxinfo_id int foreign key references playerxinfo(playerxinfo_id);
 
 insert into user_type values (1,'Administrator'),(2,'Fanatic');

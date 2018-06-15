@@ -15,7 +15,7 @@ namespace XFifaFantasy.Tests.Controllers
             HomeController controller = new HomeController();
 
             // Actuar
-            ViewResult result = controller.Index() as ViewResult;
+            ViewResult result = controller.Indexas ViewResult;
 
             // Declarar
             Assert.IsNotNull(result);

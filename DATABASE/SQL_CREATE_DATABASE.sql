@@ -226,4 +226,7 @@ declare @result int;
 declare @date DATE;
 declare @datet DATETIME;
 select @date = CONVERT(date,GETDATE());
-exec @result =  dbo.insertfanatic @f_login='juan',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth=@date ,@f_password='juantaco',@f_country=1;
+exec @result =  dbo.insertfanatic @f_login='admin',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth=@date ,@f_password='juantaco',@f_country=1;
+print @result;
+exec @result = dbo.insertadmin @a_username='admin',@a_name='pedro',@a_last_name='perez',@a_email='security@tacos.com',@a_password='juanito';
+print @result;

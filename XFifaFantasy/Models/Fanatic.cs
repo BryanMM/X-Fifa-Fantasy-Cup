@@ -10,14 +10,14 @@ namespace XFifaFantasy.Models
         public int fanatic_id { get; set; }
         public string fanatic_login { get; set; }
         public string fanatic_name { get; set; }
-        public string last_name { get; set; }
-        public string user_email { get; set; }
-        public int user_phone { get; set; }
-        public DateTime user_birth { get; set; }
-        public string user_photo { get; set; }
-        public DateTime user_date_create { get; set; }
-        public string user_password { get; set; }
-        public string user_description { get; set; } 
-        public bool active { get; set; }
+        public string fanatic_last_name { get; set; }
+        public string fanatic_email { get; set; }
+        public int fanatic_phone { get; set; }
+        public DateTime fanatic_birth { get; set; }
+        public string fanatic_photo { get; set; }
+        public DateTime fanatic_date_create { get; set; }
+        public string fanatic_password { get; set; }
+        public string fanatic_description { get; set; } 
+        public bool fanatic_active { get; set; }
     }
 }

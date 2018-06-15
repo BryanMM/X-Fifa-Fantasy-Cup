@@ -30,7 +30,7 @@ as begin
 		SET @variable =-1;
 	end catch;
 	set @inst = 'f_'+@f_login;
-	select @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@f_password);
+	set @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@f_password);
 	insert into fanatic(fanatic_login,fanatic_name,fanatic_last_name,fanatic_email,fanatic_phone,fanatic_birth,fanatic_date_create,fanatic_password,fanatic_active,fanatic_photo,fanatic_description) values(@f_login,@f_name,@f_last_name,@f_email,@f_phone,@f_birth,@f_date_create,@password,@f_active,@f_photo,@f_about);
 	insert into userxinfo(user_type_id,country_id,fanatic_login) values(2,@f_country,@f_login)
 end;
@@ -89,10 +89,9 @@ as begin
 	declare @pass_encrypt varbinary(max);
 	set @admin_name = 'a_'+ @user_username;
 	set @fanatic_name = 'f_'+ @user_username;
-	if (select ASYMKEY_ID(@admin_name))<>NULL
+	if (select ASYMKEY_ID(@admin_name))>=0
 		begin
-			print 'entró aquí';
-			select @pass_encrypt as admin_password from admin where admin_username = @user_username;
+			select @pass_encrypt = admin_password from admin where admin_username = @user_username;
 			set @password = CONVERT(varchar(8),DECRYPTBYASYMKEY(ASYMKEY_ID(@admin_name),@pass_encrypt),0);
 			if (@password = @user_password)
 			begin
@@ -101,10 +100,10 @@ as begin
 				set @result = -3;
 			end
 		end
-	else if (select ASYMKEY_ID(@fanatic_name))<>NULL
+	else if (select ASYMKEY_ID(@fanatic_name))>=0
 		begin
-			select @pass_encrypt as fanatic_password from fanatic where fanatic_login = @user_username;
-			set @password = CONVERT(varchar(8),DECRYPTBYASYMKEY(ASYMKEY_ID(@admin_name),@pass_encrypt),0);
+			select @pass_encrypt = fanatic_password from fanatic where fanatic_login = @user_username;
+			set @password = CONVERT(varchar(8),DECRYPTBYASYMKEY(ASYMKEY_ID(@fanatic_name),@pass_encrypt),0);
 			if (@password = @user_password)
 			begin
 				set @result = 2;

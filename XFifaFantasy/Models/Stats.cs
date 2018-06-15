@@ -17,7 +17,6 @@ namespace XFifaFantasy.Models
         public int assistance { get; set; }
         public int ball_back { get; set; }
         public int yellow_card { get; set; }
-        public int red_card { get; set; }
         public int expulsion { get; set; }
         public int penalty_stop { get; set; }
         public int penalty_cause { get; set; }

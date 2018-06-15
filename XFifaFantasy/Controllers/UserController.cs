@@ -66,16 +66,13 @@ namespace XFifaFantasy.Controllers
         public JsonResult<DbConnection> Post(Fanatic fanatic)
         {
             System.Diagnostics.Debug.WriteLine("llegó al post");
-            DbConnection constructor = new DbConnection();
-            
+            DbConnection constructor = new DbConnection();           
             System.Diagnostics.Debug.WriteLine("entrando al get");
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             SqlCommand sqlCmd = new SqlCommand();
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
-
-
             sqlCmd.CommandType = CommandType.StoredProcedure;
             sqlCmd.Parameters.Add("@fanatic_name", SqlDbType.VarChar).Value = fanatic.fanatic_name;
             sqlCmd.Parameters.Add("@fanatic_last_name", SqlDbType.VarChar).Value = fanatic.fanatic_last_name;
@@ -86,15 +83,26 @@ namespace XFifaFantasy.Controllers
             sqlCmd.Parameters.Add("@fanatic_country", SqlDbType.Int).Value = fanatic.fanatic_country;
             sqlCmd.Parameters.Add("@fanatic_about", SqlDbType.VarChar).Value = fanatic.fanatic_description;
             sqlCmd.Parameters.Add("@fanatic_phone", SqlDbType.Int).Value = fanatic.fanatic_phone;
-
-
             System.Diagnostics.Debug.WriteLine("cargo comando");
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
-            sqlCmd.ExecuteScalar();
-
-            
+            Object reader = null;
+            reader = sqlCmd.ExecuteScalar();
+            if (Int32.Parse(reader.ToString()) > 0)
+            {
+                constructor.success = "true";
+                constructor.detail = "null";
+                myConnection.Close();
+                return Json(constructor);
+            }
+            else
+            {
+                constructor.success = "false";
+                constructor.detail = "User already exist";
+                myConnection.Close();
+                return Json(constructor);
+            }
         }
     }
 }

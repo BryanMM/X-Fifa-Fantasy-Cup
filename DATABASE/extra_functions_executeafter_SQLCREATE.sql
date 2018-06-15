@@ -25,14 +25,14 @@ as begin
 	begin try
 		EXEC (@inst);
 		set @variable = 1;
+		set @inst = @f_login;
+		set @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@f_password);
+		insert into fanatic(fanatic_login,fanatic_name,fanatic_last_name,fanatic_email,fanatic_phone,fanatic_birth,fanatic_date_create,fanatic_password,fanatic_active,fanatic_photo,fanatic_description) values(@f_login,@f_name,@f_last_name,@f_email,@f_phone,@f_birth,@f_date_create,@password,@f_active,@f_photo,@f_about);
+		insert into userxinfo(user_type_id,country_id,fanatic_login) values(2,@f_country,@f_login);
 	end try
 	begin catch
 		SET @variable =-1;
 	end catch;
-	set @inst = @f_login;
-	set @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@f_password);
-	insert into fanatic(fanatic_login,fanatic_name,fanatic_last_name,fanatic_email,fanatic_phone,fanatic_birth,fanatic_date_create,fanatic_password,fanatic_active,fanatic_photo,fanatic_description) values(@f_login,@f_name,@f_last_name,@f_email,@f_phone,@f_birth,@f_date_create,@password,@f_active,@f_photo,@f_about);
-	insert into userxinfo(user_type_id,country_id,fanatic_login) values(2,@f_country,@f_login);
 	return @variable;
 end;
 Go;
@@ -54,15 +54,15 @@ as begin
 	set @inst = 'create asymmetric key ' +@a_username +' with algorithm = RSA_2048;';
 	begin try
 		EXEC (@inst);
+		set @inst = @a_username;
+		set @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@a_password);
+		insert into admin(admin_username,admin_name,admin_last_name,admin_email,admin_date_create,admin_password) values(@a_username,@a_name,@a_last_name,@a_email,@f_date_create,@password);
+		insert into adminxinfo(admin_username,user_type_id) values(@a_username,1);
 		set @variable = 1;
 	end try
 	begin catch
 		SET @variable =-1;
 	end catch;
-	set @inst = @a_username;
-	set @password = ENCRYPTBYASYMKEY(ASYMKEY_ID(@inst),@a_password);
-	insert into admin(admin_username,admin_name,admin_last_name,admin_email,admin_date_create,admin_password) values(@a_username,@a_name,@a_last_name,@a_email,@f_date_create,@password);
-	insert into adminxinfo(admin_username,user_type_id) values(@a_username,1);
 	return @variable;
 end;
 go;
@@ -112,6 +112,8 @@ as begin
 			select @passuser_encrypt = fanatic_password from fanatic where fanatic_login = @user_username;
 			set @passwordadmin = CONVERT(varchar(8),DECRYPTBYASYMKEY(ASYMKEY_ID(@user_username),@passadmin_encrypt),0);
 			set @passworduser = CONVERT(varchar(8),DECRYPTBYASYMKEY(ASYMKEY_ID(@user_username),@passuser_encrypt),0);
+			print @passwordadmin;
+			print @passworduser;
 			if (@passwordadmin = @user_password)
 			begin
 				set @result = 1;

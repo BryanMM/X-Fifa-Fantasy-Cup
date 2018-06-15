@@ -20,7 +20,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         public JsonResult<DbConnection> login(LoginDetails data)
         {
             System.Diagnostics.Debug.WriteLine("llegó al post");
-
+            
             DbConnection constructor = new DbConnection();
             if (data.username == "" | data.password == "")
             {
@@ -33,25 +33,23 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             Object reader = null;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            System.Diagnostics.Debug.WriteLine("cargo base");
-            SqlCommand sqlCmd = new SqlCommand();
-            System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
+            myConnection.Open();
+            SqlCommand sqlCmd = new SqlCommand("checkuser",myConnection);
 
 
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            sqlCmd.Parameters.Add("@username", SqlDbType.VarChar).Value = data.username;
-            sqlCmd.Parameters.Add("@password", SqlDbType.VarChar).Value = data.password;
-            System.Diagnostics.Debug.WriteLine("cargo comando");
-            sqlCmd.Connection = myConnection;
-            myConnection.Open();
-            System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
-            reader = sqlCmd.ExecuteScalar();
-
-            if (Int32.Parse(reader.ToString()) > 0)
+            sqlCmd.Parameters.Add(new SqlParameter("@user_username", data.username));
+            sqlCmd.Parameters.Add(new SqlParameter("@user_password",data.password));
+            var returnparam = new SqlParameter {ParameterName="@result",Direction=ParameterDirection.ReturnValue};
+            sqlCmd.Parameters.Add(returnparam);
+            sqlCmd.ExecuteNonQuery();
+            int result = (int)returnparam.Value;
+            myConnection.Close();
+            if ( result> 0)
             {
                 constructor.success = "true";
                 constructor.detail = "";
-                myConnection.Close();
+                
                 return Json(constructor);
             }
             else

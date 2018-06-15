@@ -40,8 +40,9 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-        
-        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
+        $location.path("/userCalendar");
+
+       /* $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
                 if (promise.data.success) {
                     UserName = $scope.usr;
@@ -58,7 +59,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     alert("the username and password you entered don't match")
                 }
 
-            });
+            });*/
     }
 });
 

@@ -15,6 +15,10 @@ login.config(function ($routeProvider) {
         .when("/userCalendar", {
             templateUrl: "User/UserCalendar.html",
             controller: "userCalendar"
+        })
+        .when("/adminCalendar", {
+            templateUrl: "Admin/AdminCalendar.html",
+            controller: "adminCalendar"
         });
 });
 
@@ -30,16 +34,24 @@ login.controller("rootCont", function ($scope, $location) {
 //Login verification controller
 login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = false;
+    $rootScope.showItemAdmin = false;
     $scope.goRegister = function () {
         $location.path("/register");
     }
     $scope.goLogin = function () {
+        
+        $location.path("/userCalendar");
 
-        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
+       /* $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
                 if (promise.data.success) {
-                    $location.path("/userCalendar");
                     UserName = $scope.usr;
+                    if (promise.data.detail == 1) { 
+                        $location.path("/adminCalendar");
+                    }
+                    else {
+                        $location.path("/userCalendar");
+                    }
                 }
                 else {
                     $scope.usr = ""
@@ -47,18 +59,19 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     alert("the username and password you entered don't match")
                 }
 
-            });
+            });*/
     }
 });
 
 login.controller("userRegister", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = false;
+    $rootScope.showItemAdmin = false;
 
     $scope.country = [];
     $http.get(Host + "/api/user/countries").
         then((promise) => {
             let mydata = promise.data;
-            $scope.country = mydata.states;
+            $scope.country = mydata.countries;
 
         });
 
@@ -88,4 +101,8 @@ login.controller("userRegister", function ($scope, $rootScope, $location, $http)
 
 login.controller("userCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = true;
+});
+
+login.controller("adminCalendar", function ($scope, $rootScope, $location, $http) {
+    $rootScope.showItemAdmin = true;
 });

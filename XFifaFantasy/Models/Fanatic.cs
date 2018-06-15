@@ -17,7 +17,8 @@ namespace XFifaFantasy.Models
         public string fanatic_photo { get; set; }
         public DateTime fanatic_date_create { get; set; }
         public string fanatic_password { get; set; }
-        public string fanatic_description { get; set; } 
+        public string fanatic_description { get; set; }
+        public int  fanatic_country { get; set; }
         public bool fanatic_active { get; set; }
     }
 }

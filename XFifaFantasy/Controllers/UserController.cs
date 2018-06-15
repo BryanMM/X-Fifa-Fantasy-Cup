@@ -77,27 +77,24 @@ namespace XFifaFantasy.Controllers
 
 
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            sqlCmd.Parameters.Add("@", SqlDbType.VarChar).Value = fanatic.name;
-            sqlCmd.Parameters.Add("@password", SqlDbType.VarChar).Value = fanatic.user_password;
+            sqlCmd.Parameters.Add("@fanatic_name", SqlDbType.VarChar).Value = fanatic.fanatic_name;
+            sqlCmd.Parameters.Add("@fanatic_last_name", SqlDbType.VarChar).Value = fanatic.fanatic_last_name;
+            sqlCmd.Parameters.Add("@fanatic_email", SqlDbType.VarChar).Value = fanatic.fanatic_email;
+            sqlCmd.Parameters.Add("@fanatic_phone", SqlDbType.Int).Value = fanatic.fanatic_phone;
+            sqlCmd.Parameters.Add("@fanatic_id", SqlDbType.VarChar).Value = fanatic.fanatic_id;
+            sqlCmd.Parameters.Add("@fanatic_photo", SqlDbType.Image).Value = fanatic.fanatic_password;
+            sqlCmd.Parameters.Add("@fanatic_country", SqlDbType.Int).Value = fanatic.fanatic_country;
+            sqlCmd.Parameters.Add("@fanatic_about", SqlDbType.VarChar).Value = fanatic.fanatic_description;
+            sqlCmd.Parameters.Add("@fanatic_phone", SqlDbType.Int).Value = fanatic.fanatic_phone;
+
+
             System.Diagnostics.Debug.WriteLine("cargo comando");
             sqlCmd.Connection = myConnection;
             myConnection.Open();
             System.Diagnostics.Debug.WriteLine("estado " + myConnection.State);
-            reader = sqlCmd.ExecuteScalar();
+            sqlCmd.ExecuteScalar();
 
-            if (Int32.Parse(reader.ToString()) > 0)
-            {
-                constructor.success = "true";
-                constructor.detail = "";
-                myConnection.Close();
-                return Json(constructor);
-            }
-            else
-            {
-                constructor.success = "false";
-                constructor.detail = "The username and password don't match";
-                return Json(constructor);
-            }
+            
         }
     }
 }

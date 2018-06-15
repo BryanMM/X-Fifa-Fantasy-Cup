@@ -1,5 +1,5 @@
- use xfifafantasycup
- go
+ create database xfifafantasycup;
+ use xfifafantasycup;
  CREATE TABLE fanatic(
 	fanatic_login		varchar(8) PRIMARY KEY NOT NULL,
 	fanatic_id			INT IDENTITY(1,1) NOT NULL,
@@ -219,9 +219,9 @@ create table livexaction(
 	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id)
 );
 
-drop database xfifafantasycup
 insert into user_type values (1,'Administrator'),(2,'Fanatic');
 insert into country values(1,'China'),(2,'Korea'),(3,'Vietnam');
+create master key encryption by password = 'juan1234'
 declare @result int;
 declare @date DATE;
 declare @datet DATETIME;

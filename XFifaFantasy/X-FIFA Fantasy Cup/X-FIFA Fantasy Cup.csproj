@@ -92,12 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\DbConnection.cs" />
     <Compile Include="Logic\TwitterApi.cs" />
+    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Fanatic.cs" />
     <Compile Include="Models\LoginDetails.cs" />
     <Compile Include="Models\Stats.cs" />

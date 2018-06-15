@@ -5,11 +5,11 @@ using System.Web;
 
 namespace XFifaFantasy.Models
 {
-    public class User
+    public class Fanatic
     {
-        public int user_id { get; set; }
-        public string user_login { get; set; }
-        public string name { get; set; }
+        public int fanatic_id { get; set; }
+        public string fanatic_login { get; set; }
+        public string fanatic_name { get; set; }
         public string last_name { get; set; }
         public string user_email { get; set; }
         public int user_phone { get; set; }
@@ -17,9 +17,7 @@ namespace XFifaFantasy.Models
         public string user_photo { get; set; }
         public DateTime user_date_create { get; set; }
         public string user_password { get; set; }
-        public string user_description { get; set; }
-        
+        public string user_description { get; set; } 
         public bool active { get; set; }
-
     }
 }

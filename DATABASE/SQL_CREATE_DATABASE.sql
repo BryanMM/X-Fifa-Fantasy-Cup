@@ -25,7 +25,7 @@ CREATE TABLE country(
 );
 
 CREATE TABLE player(
-	player_id INT PRIMARY KEY NOT NULL,
+	player_id varchar(8) PRIMARY KEY NOT NULL,
 	player_name VARCHAR(30) NOT NULL,
 	player_last_name VARCHAR(30) NOT NULL,
 	player_birth DATE NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE playerxinfo(
 	playerxinfo_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	country_id INT FOREIGN KEY REFERENCES country(country_id),
 	playerxposition_id INT FOREIGN KEY REFERENCES playerxposition(playerxposition_id),
-	player_id INT FOREIGN KEY REFERENCES player(player_id)
+	player_id varchar(8) FOREIGN KEY REFERENCES player(player_id)
 );
 
 create table tournament(
@@ -167,7 +167,7 @@ create table tournamentxgroup(
 create table tournamentxplayer(
 	tournamentxplayer_id int identity(1,1) primary key not null,
 	tournamentxcountry_id int foreign key references tournamentxcountry(tournamentxcountry_id),
-	player_id int foreign key references player(player_id),
+	player_id varchar(8) foreign key references player(player_id),
 );
 
 create table tournamentxmatch(

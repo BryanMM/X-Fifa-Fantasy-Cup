@@ -1,3 +1,5 @@
+ use xfifafantasycup
+ go
  CREATE TABLE fanatic(
 	fanatic_login		varchar(8) PRIMARY KEY NOT NULL,
 	fanatic_id			INT IDENTITY(1,1) NOT NULL,
@@ -7,8 +9,7 @@
 	fanatic_phone		int NOT NULL,
 	fanatic_birth		DATE NOT NULL,
 	fanatic_date_create	DATETIME NOT NULL,
-	fanatic_password	varchar(344) NOT NULL,
-	fanatic_private_key	varchar(1616) NOT NULL,
+	fanatic_password	varbinary(max) NOT NULL,
 	fanatic_active		BIT NOT NULL DEFAULT (1),
 	fanatic_photo		IMAGE,
 	fanatic_description	varchar(300)
@@ -73,8 +74,7 @@ CREATE TABLE admin(
 	admin_last_name varchar(30) not null,
 	admin_email varchar(255) not null,
 	admin_date_create DATETIME not null,
-	admin_password varchar(344) not null,
-	admin_private_key varchar(1616) not null
+	admin_password varbinary(max) not null
 );
 
 CREATE TABLE grouptournament(
@@ -219,4 +219,11 @@ create table livexaction(
 	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id)
 );
 
+drop database xfifafantasycup
 insert into user_type values (1,'Administrator'),(2,'Fanatic');
+insert into country values(1,'China'),(2,'Korea'),(3,'Vietnam');
+declare @result int;
+declare @date DATE;
+declare @datet DATETIME;
+select @date = CONVERT(date,GETDATE());
+exec @result =  dbo.insertfanatic @f_login='juan',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth=@date ,@f_password='juantaco',@f_country=1;

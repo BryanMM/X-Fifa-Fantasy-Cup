@@ -1,6 +1,6 @@
 use xfifafantasycup
 go
-alter procedure insertfanatic
+create procedure insertfanatic
 	@f_login		VARCHAR(8),
 	@f_name			VARCHAR(30),
 	@f_last_name	VARCHAR(30),
@@ -77,7 +77,7 @@ as begin
 end;
 go;
 
-alter procedure checkuser
+create procedure checkuser
 	@user_username varchar(8),
 	@user_password varchar(8)
 as begin

@@ -1,5 +1,7 @@
  create database xfifafantasycup;
+ go;
  use xfifafantasycup;
+ go;
  CREATE TABLE fanatic(
 	fanatic_login		varchar(8) PRIMARY KEY NOT NULL,
 	fanatic_id			INT IDENTITY(1,1) NOT NULL,

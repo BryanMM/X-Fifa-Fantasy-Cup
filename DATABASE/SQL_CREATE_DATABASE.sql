@@ -66,7 +66,7 @@ CREATE TABLE stats(
 CREATE TABLE live(
 	live_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	live_start DATETIME NOT NULL,
-	live_end DATETIME NOT NULL
+	live_end DATETIME
 );
 
 CREATE TABLE admin(
@@ -232,3 +232,8 @@ exec @result =  dbo.insertfanatic @f_login='pedro',@f_name='juan',@f_last_name='
 print @result;
 exec @result = dbo.insertadmin @a_username='pedro',@a_name='pedro',@a_last_name='perez',@a_email='security@tacos.com',@a_password='juanito';
 print @result;
+
+insert into powerup_type(powerup_type_name) values('Multiplicador'),('Sumador');
+
+alter table live drop column live_end;
+alter table live add live_end DATETIME;

@@ -93,12 +93,14 @@ as begin
 end;
 go;
 
+-- New version of the procedure, it retrieves a table because the FK of userxinfo_id is needed, not just the type.
 create procedure checkuser
 	@user_username varchar(8),
 	@user_password varchar(8)
 as begin
 	set nocount on;
 	declare @result int;
+	--declare @userinfo table (usertype int,userid int);
 	declare @admin_pass varchar(8);
 	declare @fanatic_pass varchar(8);
 	declare @passwordadmin varchar(8);
@@ -116,10 +118,10 @@ as begin
 			print @passworduser;
 			if (@passwordadmin = @user_password)
 			begin
-				set @result = 1;
+				select user_type_id,adminxinfo_id from adminxinfo where admin_username = @user_username;
 			end else if @passworduser = @user_password
 			begin
-				set @result = 2;
+				select user_type_id,userxinfo_id from userxinfo where fanatic_login = @user_username;
 			end else begin
 				set @result = -3;
 			end
@@ -127,5 +129,192 @@ as begin
 	else begin
 		set @result = -2;
 		end
-	return @result;
 end
+
+/**********************************************************************************
+
+******   New procedures added, remember to use: use xfifafantasycup; **************
+
+***********************************************************************************/
+
+-- Returns the id for the tournament just created, it is needed because
+-- when you are creating the tournament, you will need that id to be able
+-- to do the rest of the inserts, it is not suitable to use random numbers
+-- to create that id, but it can be done.
+-- This stored procedure is applied in the early stage of configuring a tournament.
+create procedure createtournament
+	@tournament_name varchar(255),
+	@sponsor_id int
+as begin
+	set nocount on;
+	declare @return int;
+	declare @id int;
+	begin try
+		insert into tournament(tournament_name,sponsor_id) values(@tournament_name,@sponsor_id);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end;
+
+-- It behaves in the same way as createtournament.
+-- Returns the recent id created necessary to add
+-- a player to a country in certain tournament.
+create procedure inserttourxcountry
+	@tournament_id int,
+	@country_id int
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into tournamentxcountry(tournament_id,country_id) values(@tournament_id,@country_id);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- It assigns a certain player to a certain tournament
+-- It depends on the country to be selected to the 
+-- tournament to be able to assign it.
+create procedure inserttourplayer
+	@tourxcountry_id int,
+	@player_id int
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into tournamentxplayer(tournamentxcountry_id,player_id) values(@tourxcountry_id,@player_id);
+		set @return = 1;
+	end try
+	begin catch
+		set @return =-1;
+	end catch
+	return @return;
+end
+
+-- It creates a powerup, the type as int is needed.
+create procedure createpowerup
+	@pu_name varchar(30),
+	@pu_unique bit,
+	@pu_selection bit,
+	@pu_sponsor int,
+	@pu_type int
+as begin
+	declare @return int;
+	begin try
+		insert into powerup(powerup_name,powerup_unique,powerup_selection,sponsor_id,powerup_type_id) values(@pu_name,@pu_unique,@pu_selection,@pu_sponsor,@pu_type);
+		set @return = 1;
+	end try
+	begin catch
+		set @return = -1
+	end catch
+	return @return;
+end;
+
+-- Inserts a new match, it does not matter if it is an official one
+-- or one created by the user.
+-- It returns the ID used to reference it to a certain score.
+create procedure inserttourxmatch
+	@team_1 varchar(255) = null,
+	@team_2 varchar(255) = null,
+	@key_team_1 int = null,
+	@key_team_2 int = null
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into tournamentxmatch(tournamentxmatch_team1,tournamentxmatch_team2,tournamentxcountry_id1,tournamentxcountry_id2)
+		values(@team_1,@team_2,@key_team_1,@key_team_2);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- Inserts a new match, every match is set to enable by default.
+-- The enable bit will be updated after each live for each match is started.
+-- It sets up everything, default score and which teams will be playing.
+create procedure insertmatch
+	@match_date DATETIME,
+	@match_location varchar(255),
+	@mteam_1 varchar(255) = null,
+	@mteam_2 varchar(255) = null,
+	@mkey_team_1 int = null,
+	@mkey_team_2 int = null
+as begin
+	set nocount on;
+	declare @return int;
+	declare @txm int;
+	begin try
+		insert into match(match_date,match_location) values(@match_date,@match_location);
+		set @return = @@IDENTITY;
+		exec @txm = inserttourxmatch @team_1 = @mteam_1,@team_2=@mteam_2,@key_team_1=@mkey_team_1,@key_team_2=@mkey_team_2;
+		insert into matchxscore(tournamentxmatch_id,match_id) values(@txm,@return);
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- It creates a new live, it sets the moment it starts and returns
+-- the id to be used in later actions.
+create procedure createlive
+	@start DATETIME
+as begin
+	declare @return int;
+	begin try
+		insert into live(live_start) values(@start);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- It creates a new event, it will be used to link to each fanatic that clicks on it.
+-- Returns its ID so it can be used to identify when a fanatic catches it.
+create procedure insertevent
+	@comment varchar(max) = '',
+	@live_id int,
+	@match_id int,
+	@pu_id int = null
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into livexmatch(livexmatch_comment,live_id,match_id,powerup_id) values(@comment,@live_id,@match_id,@pu_id);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- Assigns to a certain fanatic a powerup.
+create procedure insertuserxlive
+	@userxmatch_id int,
+	@userxinfo_id int
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into userxlive(livexmatch_id,userxinfo_id) values(@userxmatch_id,@userxinfo_id);
+		set @return =1;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+-- livexaction no es necesario de hacerle un store procedure porque en el web page ya se tiene esa información.

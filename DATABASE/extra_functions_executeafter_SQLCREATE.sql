@@ -118,10 +118,10 @@ as begin
 			print @passworduser;
 			if (@passwordadmin = @user_password)
 			begin
-				select user_type_id,adminxinfo_id from adminxinfo where admin_username = @user_username;
+				select axi.user_type_id,axi.adminxinfo_id from admin as ad left outer join adminxinfo as axi on (ad.admin_username = axi.admin_username) where ad.admin_username = @user_username;
 			end else if @passworduser = @user_password
 			begin
-				select user_type_id,userxinfo_id from userxinfo where fanatic_login = @user_username;
+				select distinct uxi.user_type_id,uxi.userxinfo_id,fan.fanatic_active from fanatic as fan left outer join userxinfo as uxi on (fan.fanatic_login = uxi.fanatic_login) where fan.fanatic_login = @user_username;
 			end else begin
 				set @result = -3;
 			end

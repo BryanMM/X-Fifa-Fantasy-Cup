@@ -40,9 +40,9 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       
+        $location.path("/userCalendar");
 
-       $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
+       /*$http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
                 if (promise.data.success === "true") {
                     UserName = $scope.usr;
@@ -59,7 +59,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     alert(promise.data.detail)
                 }
 
-            });
+            });*/
     }
 });
 
@@ -93,7 +93,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
                 description: $scope.description
             }).
                 then((promise) => {
-                    if (promise.data.success) {
+                    if (promise.data.success === "true") {
                         $location.path("/");
                     }
                 });

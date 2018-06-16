@@ -13,9 +13,9 @@ namespace X_FIFA_Fantasy_Cup.Models
         public string fanatic_last_name { get; set; }
         public string fanatic_email { get; set; }
         public int fanatic_phone { get; set; }
-        public DateTime fanatic_birth { get; set; }
+        public string fanatic_birth { get; set; }
         public string fanatic_photo { get; set; }
-        public DateTime fanatic_date_create { get; set; }
+        public string fanatic_date_create { get; set; }
         public string fanatic_password { get; set; }
         public string fanatic_description { get; set; }
         public int fanatic_country { get; set; }

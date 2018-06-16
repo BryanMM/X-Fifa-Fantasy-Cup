@@ -81,7 +81,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             myConnection.Open();
-            SqlCommand sqlCmd = new SqlCommand("insertfanatic",myConnection);
+            SqlCommand sqlCmd = new SqlCommand("insertfanatic", myConnection);
             System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
             sqlCmd.CommandType = CommandType.StoredProcedure;
             sqlCmd.Parameters.Add(new SqlParameter("@f_username", fanatic.fanatic_id));
@@ -152,7 +152,57 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
                 }
             }
+        }
+
+            [HttpPost]
+        [ActionName("register")]
+        public JsonResult<DbConnection> adminregister(Admin admin)
+        {
+            System.Diagnostics.Debug.WriteLine("llegó al post");
+            DbConnection constructor = new DbConnection();
+            System.Diagnostics.Debug.WriteLine("entrando al get");
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            System.Diagnostics.Debug.WriteLine("cargo base");
+            myConnection.Open();
+            SqlCommand sqlCmd = new SqlCommand("insertadmin", myConnection);
+            System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.Add(new SqlParameter("@a_username", admin.admin_id));
+            sqlCmd.Parameters.Add(new SqlParameter("@a_name", admin.admin_name));
+            sqlCmd.Parameters.Add(new SqlParameter("@a_last_name", admin.admin_last_name));
+            sqlCmd.Parameters.Add(new SqlParameter("@a_email", admin.admin_email));                                   
+            sqlCmd.Parameters.Add(new SqlParameter("@a_password", admin.admin_password));            
             
+            
+
+            var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+            sqlCmd.Parameters.Add(returnparam);
+            sqlCmd.ExecuteNonQuery();
+            int result = (int)returnparam.Value;
+            if (result > 0)
+            {
+                constructor.success = "true";
+
+                constructor.detail = result.ToString();
+
+                return Json(constructor);
+            }
+            else if (result == -3)
+            {
+                constructor.success = "false";
+                constructor.detail = "The username and password don't match";
+                return Json(constructor);
+            }
+            else
+            {
+                constructor.success = "false";
+                constructor.detail = "The user doesn't exist";
+                return Json(constructor);
+
+            }
+            
+
         }
         
     }

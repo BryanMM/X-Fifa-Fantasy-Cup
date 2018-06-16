@@ -72,7 +72,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
         [HttpPost]
         [ActionName("register")]
-        public JsonResult<DbConnection> register(Fanatic fanatic)
+        public JsonResult<DbConnection> Register(Fanatic fanatic)
         {
             System.Diagnostics.Debug.WriteLine("llegó al post");
             DbConnection constructor = new DbConnection();
@@ -102,6 +102,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 sqlCmd.Parameters.Add(returnparam);
                 sqlCmd.ExecuteNonQuery();
                 int result = (int)returnparam.Value;
+                myConnection.Close();
                 if (result > 0)
                 {
                     constructor.success = "true";
@@ -130,31 +131,26 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 sqlCmd.Parameters.Add(returnparam);
                 sqlCmd.ExecuteNonQuery();
                 int result = (int)returnparam.Value;
+                myConnection.Close();
                 if (result > 0)
                 {
                     constructor.success = "true";
 
-                    constructor.detail = result.ToString();
+                    constructor.detail = "";
 
-                    return Json(constructor);
-                }
-                else if (result == -3)
-                {
-                    constructor.success = "false";
-                    constructor.detail = "The username and password don't match";
                     return Json(constructor);
                 }
                 else
                 {
                     constructor.success = "false";
-                    constructor.detail = "The user doesn't exist";
+                    constructor.detail = "User already exists";
                     return Json(constructor);
 
                 }
             }
         }
 
-            [HttpPost]
+        [HttpPost]
         [ActionName("register")]
         public JsonResult<DbConnection> adminregister(Admin admin)
         {
@@ -172,32 +168,24 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.Parameters.Add(new SqlParameter("@a_name", admin.admin_name));
             sqlCmd.Parameters.Add(new SqlParameter("@a_last_name", admin.admin_last_name));
             sqlCmd.Parameters.Add(new SqlParameter("@a_email", admin.admin_email));                                   
-            sqlCmd.Parameters.Add(new SqlParameter("@a_password", admin.admin_password));            
-            
-            
-
+            sqlCmd.Parameters.Add(new SqlParameter("@a_password", admin.admin_password));                                   
             var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
             sqlCmd.Parameters.Add(returnparam);
             sqlCmd.ExecuteNonQuery();
             int result = (int)returnparam.Value;
+            myConnection.Close();
             if (result > 0)
             {
                 constructor.success = "true";
 
-                constructor.detail = result.ToString();
+                constructor.detail = "";
 
-                return Json(constructor);
-            }
-            else if (result == -3)
-            {
-                constructor.success = "false";
-                constructor.detail = "The username and password don't match";
                 return Json(constructor);
             }
             else
             {
                 constructor.success = "false";
-                constructor.detail = "The user doesn't exist";
+                constructor.detail = "The user already exist";
                 return Json(constructor);
 
             }

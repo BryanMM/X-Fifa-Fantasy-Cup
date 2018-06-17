@@ -319,7 +319,7 @@ end
 -- Retrieves next stage depending on the query, it will return the code of the country as well 
 -- as the name of the country.
 -- It returns a table, the team_1 and team_2 refers to tournamentxcountry and not to country.
-alter procedure getnextstage
+create procedure getnextstage
 	@next_stage int
 as begin
 	set nocount on;

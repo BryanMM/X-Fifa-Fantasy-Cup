@@ -31,7 +31,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
             }
             System.Diagnostics.Debug.WriteLine("entrando al get");
-            Object reader = null;
+            //Object reader = null;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             myConnection.Open();
@@ -89,8 +89,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.Parameters.Add(new SqlParameter("@f_last_name", fanatic.fanatic_last_name));
             sqlCmd.Parameters.Add(new SqlParameter("@f_email", fanatic.fanatic_email));
             sqlCmd.Parameters.Add(new SqlParameter("@f_phone", fanatic.fanatic_phone));
-            System.Diagnostics.Debug.WriteLine(fanatic.fanatic_birth.Date);
-            sqlCmd.Parameters.Add(new SqlParameter("@f_birth", fanatic.fanatic_birth.Date));
+            //System.Diagnostics.Debug.WriteLine(fanatic.fanatic_birth.Date);
+            //sqlCmd.Parameters.Add(new SqlParameter("@f_birth", fanatic.fanatic_birth.Date));
             sqlCmd.Parameters.Add(new SqlParameter("@f_password", fanatic.fanatic_password));
             sqlCmd.Parameters.Add(new SqlParameter("@f_active", fanatic.fanatic_active));
             sqlCmd.Parameters.Add(new SqlParameter("@f_about", fanatic.fanatic_description));

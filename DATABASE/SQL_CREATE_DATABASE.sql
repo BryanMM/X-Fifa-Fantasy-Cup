@@ -210,14 +210,9 @@ CREATE TABLE userxscore(
 	txc_team2 int foreign key references tournamentxcountry(tournamentxcountry_id)
 );
 
-create table stage(
-	stage_id int identity(1,1) primary key not null,
-	stage_name varchar(255)
-);
-
 create table tournamentxstage(
 	txs_id int identity(1,1) primary key not null,
-	stage_id int foreign key references stage(stage_id),
+	stage_id int,
 	tournament_id int foreign key references tournament(tournament_id)
 );
 
@@ -243,15 +238,19 @@ print @result;
 
 insert into powerup_type(powerup_type_name) values('Multiplicador'),('Sumador');
 
-alter table live drop column live_end;
-alter table live add live_end DATETIME;
-
 insert into sponsor(sponsor_name,sponsor_status,sponsor_photo) values('Coca Cola',1,'C:/Program Files...');
 insert into tournament(tournament_name,sponsor_id) values('Rusia 2018',1);
 insert into tournamentxcountry(tournament_id,country_id) values(1,1),(1,2),(1,3);
-insert into stage(stage_name) values('Stage B');
-insert into tournamentxstage(stage_id,tournament_id) values(2,1);
-declare @date datetime;
-set @date = GETDATE()
-exec insertadminmatch @match_date=@date,@match_location='Costa Rica',@txs_id=3,@txc_team_1=2,@txc_team_2=3
 
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=2,@tournament_id=1;
+
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
+
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1
+
+
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1

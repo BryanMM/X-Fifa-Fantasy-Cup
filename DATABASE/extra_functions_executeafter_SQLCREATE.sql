@@ -118,10 +118,10 @@ as begin
 			print @passworduser;
 			if (@passwordadmin = @user_password)
 			begin
-				select axi.user_type_id,axi.adminxinfo_id from admin as ad left outer join adminxinfo as axi on (ad.admin_username = axi.admin_username) where ad.admin_username = @user_username;
+				select axi.user_type_id as user_type,axi.adminxinfo_id as user_login from admin as ad left outer join adminxinfo as axi on (ad.admin_username = axi.admin_username) where ad.admin_username = @user_username;
 			end else if @passworduser = @user_password
 			begin
-				select distinct uxi.user_type_id,uxi.userxinfo_id,fan.fanatic_active from fanatic as fan left outer join userxinfo as uxi on (fan.fanatic_login = uxi.fanatic_login) where fan.fanatic_login = @user_username;
+				select distinct uxi.user_type_id as user_type,uxi.userxinfo_id as user_login ,fan.fanatic_active as user_active from fanatic as fan left outer join userxinfo as uxi on (fan.fanatic_login = uxi.fanatic_login) where fan.fanatic_login = @user_username;
 			end else begin
 				set @result = -3;
 			end
@@ -272,31 +272,11 @@ as begin
 	return @return;
 end
 
-
--- Creates a new stage, it adds a name to it. 
--- Returns its ID to be used later.
-create procedure insertstage
-	@stage_name varchar(255) = '',
-	@tournament_id int
-as begin
-	set nocount on;
-	declare @return int;
-	begin try
-		insert into stage(stage_name) values(@stage_name);
-		set @return = @@IDENTITY;
-		insert into tournamentxstage(stage_id, tournament_id) values(@return,@tournament_id);
-		set @return = @@IDENTITY;
-	end try
-	begin catch
-		set @return = -1;
-	end catch
-	return @return;
-end
-
 create procedure insertadminmatch
 	@match_date DATETIME,
 	@match_location varchar(255),
-	@txs_id int,
+	@stage_id int,
+	@tournament_id int,
 	@txc_team_1 int = null,
 	@txc_team_2 int = null,
 	@sxm_winner1 int = null,
@@ -305,10 +285,19 @@ create procedure insertadminmatch
 as begin
 	set nocount on;
 	declare @return int;
+	declare @id int;
 	begin try
+		if exists(select * from tournamentxstage where stage_id = @stage_id and tournament_id = @tournament_id)
+		begin
+			select top 1 @id = txs_id from tournamentxstage where stage_id = @stage_id and tournament_id = @tournament_id;
+		end else
+		begin
+			insert into tournamentxstage(stage_id,tournament_id) values(@stage_id,@tournament_id);
+			set @id = @@IDENTITY;
+		end
 		insert into match(match_date,match_location,match_enable,txc_team_1,txc_team_2) values(@match_date,@match_location,@match_enable,@txc_team_1,@txc_team_2);
 		set @return = @@IDENTITY;                                                                                                                                                                                                                                                                   
-		insert into stagexmatch(winner_1,winner_2,match_id,txs_id) values(@sxm_winner1,@sxm_winner2,@return,@txs_id);
+		insert into stagexmatch(winner_1,winner_2,match_id,txs_id) values(@sxm_winner1,@sxm_winner2,@return,@id);
 	end try
 	begin catch
 		set @return = -1;
@@ -320,7 +309,8 @@ end
 -- as the name of the country.
 -- It returns a table, the team_1 and team_2 refers to tournamentxcountry and not to country.
 create procedure getnextstage
-	@next_stage int
+	@next_stage int,
+	@tournament_id int
 as begin
 	set nocount on;
 	declare @match int;
@@ -331,7 +321,7 @@ as begin
 	tournamentxstage as txs left outer join stagexmatch as sxm on (txs.txs_id = sxm.txs_id) left outer join match as mtc on (sxm.match_id = mtc.match_id) 
 	left outer join tournamentxcountry as txc on (mtc.txc_team_1 = txc.tournamentxcountry_id or mtc.txc_team_2 = txc.tournamentxcountry_id)
 	left outer join country as ctr on (ctr.country_id = txc.tournamentxcountry_id and mtc.txc_team_1 = txc.tournamentxcountry_id )
-	where txs.stage_id = @next_stage;
+	where txs.stage_id = @next_stage and txs.tournament_id = @tournament_id;
 	select *  into #temp from @table
 	while exists(select * from #temp)
 		begin

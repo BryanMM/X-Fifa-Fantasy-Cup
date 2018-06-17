@@ -9,7 +9,7 @@ create procedure insertfanatic
 	@f_birth		DATE,
 	@f_password		VARCHAR(8),
 	@f_active		BIT = 1,
-	@f_photo		IMAGE = NULL,
+	@f_photo		varchar(max) = NULL,
 	@f_about		VARCHAR(300) = '',
 	@f_country		INT
 as begin
@@ -76,7 +76,7 @@ create procedure insertplayer
 	@p_team	 varchar(30),
 	@p_price int,
 	@p_active bit,
-	@p_photo image,
+	@p_photo varchar(max),
 	@p_position int,
 	@p_country int
 as begin
@@ -219,12 +219,14 @@ end;
 -- It creates a new live, it sets the moment it starts and returns
 -- the id to be used in later actions.
 create procedure createlive
-	@start DATETIME
+	@start DATETIME,
+	@match_id int
 as begin
 	declare @return int;
 	begin try
 		insert into live(live_start) values(@start);
 		set @return = @@IDENTITY;
+		insert into livexmatch(match_id,live_id) values(@match_id,@return);
 	end try
 	begin catch
 		set @return = -1;
@@ -237,13 +239,12 @@ end
 create procedure insertevent
 	@comment varchar(max) = '',
 	@live_id int,
-	@match_id int,
 	@pu_id int = null
 as begin
 	set nocount on;
 	declare @return int;
 	begin try
-		insert into livexmatch(livexmatch_comment,live_id,match_id,powerup_id) values(@comment,@live_id,@match_id,@pu_id);
+		insert into livexcomment(livexcomment_comment,live_id,powerup_id) values(@comment,@live_id,@pu_id);
 		set @return = @@IDENTITY;
 	end try
 	begin catch
@@ -306,12 +307,39 @@ as begin
 	declare @return int;
 	begin try
 		insert into match(match_date,match_location,match_enable,txc_team_1,txc_team_2) values(@match_date,@match_location,@match_enable,@txc_team_1,@txc_team_2);
-		set @return = @@IDENTITY;
+		set @return = @@IDENTITY;                                                                                                                                                                                                                                                                   
 		insert into stagexmatch(winner_1,winner_2,match_id,txs_id) values(@sxm_winner1,@sxm_winner2,@return,@txs_id);
 	end try
 	begin catch
 		set @return = -1;
 	end catch
 	return @return;
+end
+
+-- Retrieves next stage depending on the query, it will return the code of the country as well 
+-- as the name of the country.
+-- It returns a table, the team_1 and team_2 refers to tournamentxcountry and not to country.
+create procedure getnextstage
+	@next_stage int
+as begin
+	set nocount on;
+	declare @win_1 int;
+	declare @win_2 int;
+	declare @match int;
+	declare @t_1 int;
+	declare @t_2 int;
+	declare @n_1 varchar(255);
+	declare @n_2 varchar(255);
+	declare @table table(winner_1 int,winner_2 int,match_id int,team_1 int,team_2 int,name_time_1 varchar(255),name_team_2 varchar(255));
+	select distinct @win_1 = sxm.winner_1, @win_2 = sxm.winner_2, @match=sxm.match_id,@t_1=mtc.txc_team_1,@t_2= mtc.txc_team_2 from 
+	stagexmatch as sxm left outer join match as mtc on (sxm.match_id = mtc.match_id) 
+	left outer join tournamentxcountry as txc on (mtc.txc_team_1 = txc.tournamentxcountry_id or mtc.txc_team_2 = txc.tournamentxcountry_id)
+	left outer join country as ctr on (ctr.country_id = txc.tournamentxcountry_id and mtc.txc_team_1 = txc.tournamentxcountry_id )
+	where sxm.txs_id = @next_stage;
+	insert into @table(winner_1,winner_2,match_id,team_1,team_2) values(@win_1,@win_2,@match,@t_1,@t_2);
+	select @n_1 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id) where txc.tournamentxcountry_id = @t_1;
+	select @n_2 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id) where txc.tournamentxcountry_id = @t_2;
+	update @table set name_time_1 = @n_1,name_team_2=@n_2 where match_id = @match;
+	select * from @table;
 end
 -- livexaction no es necesario de hacerle un store procedure porque en el web page ya se tiene esa información.

@@ -16,6 +16,41 @@ namespace X_FIFA_Fantasy_Cup.Controllers
     public class TournamentController : ApiController
     {
         [HttpPost]
+        [ActionName("AddPowerup")]
+        public JsonResult<DbConnection> AddPowerup(Powerup powerup)
+        {            
+            DbConnection constructor = new DbConnection();            
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;            
+            myConnection.Open();
+            SqlCommand sqlCmd = new SqlCommand("createpowerup", myConnection);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.Add(new SqlParameter("@pu_name", powerup.powerup_name));
+            sqlCmd.Parameters.Add(new SqlParameter("@pu_name", powerup.powerup_name));
+            sqlCmd.Parameters.Add(new SqlParameter("@pu_selection", powerup.powerup_selection));
+            sqlCmd.Parameters.Add(new SqlParameter("@pu_sponsor", powerup.sponsor_id));
+            sqlCmd.Parameters.Add(new SqlParameter("@pu_type", powerup.powerup_type_id));            
+            var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+            sqlCmd.Parameters.Add(returnparam);
+            sqlCmd.ExecuteNonQuery();
+            int result = (int)returnparam.Value;
+            if (result > 0)
+            {
+                constructor.success = "true";
+
+                constructor.detail = result.ToString();
+
+                return Json(constructor);
+            }
+            else
+            {
+                constructor.success = "false";
+                constructor.detail = "Error while inserting the tournament";
+                return Json(constructor);
+
+            }
+        }
+        [HttpPost]
         [ActionName("Create")]
         public JsonResult<DbConnection> Create(Tournament tournament)
         {
@@ -56,16 +91,12 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         [HttpPost]
         [ActionName("Add")]
         public JsonResult<DbConnection> AddCountry(Country country)
-        {
-            System.Diagnostics.Debug.WriteLine("llegó al post");
-            DbConnection constructor = new DbConnection();
-            System.Diagnostics.Debug.WriteLine("entrando al get");
+        {            
+            DbConnection constructor = new DbConnection();            
             SqlConnection myConnection = new SqlConnection();
-            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            System.Diagnostics.Debug.WriteLine("cargo base");
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;          
             myConnection.Open();
-            SqlCommand sqlCmd = new SqlCommand("inserttourxcountry", myConnection);
-            System.Diagnostics.Debug.WriteLine("cargo sqlcommand");
+            SqlCommand sqlCmd = new SqlCommand("inserttourxcountry", myConnection);            
             sqlCmd.CommandType = CommandType.StoredProcedure;
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", country.tournament_id));
             sqlCmd.Parameters.Add(new SqlParameter("@country_id", country.Id));            
@@ -91,5 +122,12 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
 
         }
+        [HttpPost]
+        [ActionName("AddMatch")]
+        public JsonResult<DbConnection> AddMatch()
+        {
+
+        }
+
     }
 }

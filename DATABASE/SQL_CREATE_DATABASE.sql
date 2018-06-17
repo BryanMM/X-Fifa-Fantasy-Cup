@@ -79,10 +79,6 @@ CREATE TABLE admin(
 	admin_password varbinary(max) not null
 );
 
-CREATE TABLE grouptournament(
-	grouptournament_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	grouptournament_winner INT NOT NULL
-);
 
 CREATE TABLE match(
 	match_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -107,14 +103,9 @@ CREATE TABLE userxinfo(
 	userxinfo_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	user_type_id INT FOREIGN KEY REFERENCES user_type(user_type_id),
 	country_id INT FOREIGN KEY REFERENCES country(country_id),
-	fanatic_login VARCHAR(8) FOREIGN KEY REFERENCES fanatic(fanatic_login)
-);
-
-CREATE TABLE userxscore(
-	userxscore_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	userxscore_score1 INT DEFAULT (0),
-	userxscore_score2 INT DEFAULT (0),
-	userxinfo_id INT FOREIGN KEY REFERENCES userxinfo(userxinfo_id)
+	fanatic_login VARCHAR(8) FOREIGN KEY REFERENCES fanatic(fanatic_login),
+	uxi_champ_note int default(0),
+	uxi_fantasy_note int default(0)
 );
 
 CREATE TABLE playerxinfo(
@@ -159,34 +150,12 @@ create table tournamentxcountry(
 	country_id int foreign key references country(country_id)
 );
 
-create table tournamentxgroup(
-	tournamentxgroup_id int identity(1,1) primary key not null,
-	grouptournament_id int foreign key references grouptournament(grouptournament_id),
-	tournament_id int foreign key references tournament(tournament_id),
-	country_id int foreign key references country(country_id)
-);
-
 create table tournamentxplayer(
 	tournamentxplayer_id int identity(1,1) primary key not null,
 	tournamentxcountry_id int foreign key references tournamentxcountry(tournamentxcountry_id),
 	player_id varchar(8) foreign key references player(player_id),
 );
 
-create table tournamentxmatch(
-	tournamentxmatch_id int identity(1,1) primary key not null,
-	tournamentxmatch_team1 varchar(255),
-	tournamentxmatch_team2 varchar(255),
-	tournamentxcountry_id1 int foreign key references tournamentxcountry(tournamentxcountry_id),
-	tournamentxcountry_id2 int foreign key references tournamentxcountry(tournamentxcountry_id)
-);
-
-create table matchxscore(
-	matchxscore_id int identity(1,1) primary key not null,
-	matchxscore_score1 int default (0),
-	matchxscore_score2 int default (0),
-	tournamentxmatch_id int foreign key references tournamentxmatch(tournamentxmatch_id),
-	match_id int foreign key references match(match_id)
-);
 
 create table livexmatch(
 	livexmatch_id int identity(1,1) primary key not null,
@@ -198,8 +167,9 @@ create table livexmatch(
 
 create table userxlive(
 	userxlive_id int identity(1,1) primary key not null,
-	livexmatch_id int foreign key references livexmatch(livexmatch_id),
-	userxinfo_id int foreign key references userxinfo(userxinfo_id)
+	live_id int foreign key references live(live_id),
+	userxinfo_id int foreign key references userxinfo(userxinfo_id),
+	powerup_id int foreign key references powerup(powerup_id)
 );
 
 create table adminxinfo(
@@ -219,6 +189,35 @@ create table livexaction(
 	action_id int foreign key references eventmatch(action_id),
 	live_id int foreign key references live(live_id),
 	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id)
+);
+
+CREATE TABLE userxscore(
+	userxscore_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	userxscore_score1 INT DEFAULT (0),
+	userxscore_score2 INT DEFAULT (0),
+	userxinfo_id INT FOREIGN KEY REFERENCES userxinfo(userxinfo_id),
+	match_id int foreign key references match(match_id),
+	txc_team1 int foreign key references tournamentxcountry(tournamentxcountry_id),
+	txc_team2 int foreign key references tournamentxcountry(tournamentxcountry_id)
+);
+
+create table stage(
+	stage_id int identity(1,1) primary key not null,
+	stage_name varchar(255)
+);
+
+create table tournamentxstage(
+	txs_id int identity(1,1) primary key not null,
+	stage_id int foreign key references stage(stage_id),
+	tournament_id int foreign key references tournament(tournament_id)
+);
+
+create table stagexmatch(
+	sxm_id int identity(1,1) primary key not null,
+	winner_1 int,
+	winner_2 int,
+	match_id int foreign key references match(match_id),
+	txs_id  int foreign key references tournamentxstage(txs_id)
 );
 
 insert into user_type values (1,'Administrator'),(2,'Fanatic');

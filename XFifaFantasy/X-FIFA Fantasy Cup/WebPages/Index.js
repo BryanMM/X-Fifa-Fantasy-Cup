@@ -19,6 +19,10 @@ login.config(function ($routeProvider) {
         .when("/adminCalendar", {
             templateUrl: "Admin/AdminCalendar.html",
             controller: "adminCalendar"
+        })
+        .when("/createTournament", {
+            templateUrl: "Admin/CreateTournament.html",
+            controller: "createTour"
         });
 });
 
@@ -40,7 +44,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       
+        $location.path("/adminCalendar");
 
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -93,7 +97,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
                 description: $scope.description
             }).
                 then((promise) => {
-                    if (promise.data.success) {
+                    if (promise.data.success === "true") {
                         $location.path("/");
                     }
                 });
@@ -107,4 +111,56 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
 
 login.controller("adminCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = true;
+    $scope.goTour = function () {
+        $location.path("/createTournament");
+    }
+});
+
+login.controller("createTour", function ($scope, $rootScope, $location, $http) {
+    $scope.teams = true;
+    $scope.groups = false;
+    $scope.stages = false;
+
+    $scope.goGroups = function () {
+        $scope.teams = false;
+        $scope.groups = true;
+
+    }
+
+    $scope.country = ["Alemania", "USA", "Canada", "China"];
+    $http.get(Host + "/api/Country/countries").
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.country = mydata;
+
+        });
+    
+    $scope.selectPlayer = ["1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "99991", "99992", "99993", "99994", "99995", "99969", "99799", "98999", "99999"];
+    $scope.selectCountry = [];
+    $scope.playerList = {};
+    var temp = { "Alemania" : ["1", "2"], "USA" : ["1", "2"], "Canada" : ["1", "2"], "China": ["1", "2"] };
+    $scope.showList = []
+
+    $scope.displayList = function () {
+        var temp2 = $scope.searchProv;
+        $scope.showList = temp[temp2];
+    }
+
+    $scope.addCountry = function () {
+        if ($scope.selectCountry.includes($scope.prov)) {
+
+        }
+        else {
+            $scope.selectCountry.push($scope.prov);
+            $scope.playerList[$scope.prov] = [];
+        }
+    }
+
+    $scope.addPlayer = function (person) {
+        $scope.playerList[$scope.searchProv].push(person);
+        console.log($scope.playerList);
+    }
+    
+   
+    
 });

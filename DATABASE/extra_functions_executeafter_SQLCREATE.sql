@@ -118,10 +118,10 @@ as begin
 			print @passworduser;
 			if (@passwordadmin = @user_password)
 			begin
-				select user_type_id,adminxinfo_id from adminxinfo where admin_username = @user_username;
+				select axi.user_type_id,axi.adminxinfo_id from admin as ad left outer join adminxinfo as axi on (ad.admin_username = axi.admin_username) where ad.admin_username = @user_username;
 			end else if @passworduser = @user_password
 			begin
-				select user_type_id,userxinfo_id from userxinfo where fanatic_login = @user_username;
+				select distinct uxi.user_type_id,uxi.userxinfo_id,fan.fanatic_active from fanatic as fan left outer join userxinfo as uxi on (fan.fanatic_login = uxi.fanatic_login) where fan.fanatic_login = @user_username;
 			end else begin
 				set @result = -3;
 			end
@@ -216,54 +216,6 @@ as begin
 	return @return;
 end;
 
--- Inserts a new match, it does not matter if it is an official one
--- or one created by the user.
--- It returns the ID used to reference it to a certain score.
-create procedure inserttourxmatch
-	@team_1 varchar(255) = null,
-	@team_2 varchar(255) = null,
-	@key_team_1 int = null,
-	@key_team_2 int = null
-as begin
-	set nocount on;
-	declare @return int;
-	begin try
-		insert into tournamentxmatch(tournamentxmatch_team1,tournamentxmatch_team2,tournamentxcountry_id1,tournamentxcountry_id2)
-		values(@team_1,@team_2,@key_team_1,@key_team_2);
-		set @return = @@IDENTITY;
-	end try
-	begin catch
-		set @return = -1;
-	end catch
-	return @return;
-end
-
--- Inserts a new match, every match is set to enable by default.
--- The enable bit will be updated after each live for each match is started.
--- It sets up everything, default score and which teams will be playing.
-create procedure insertmatch
-	@match_date DATETIME,
-	@match_location varchar(255),
-	@mteam_1 varchar(255) = null,
-	@mteam_2 varchar(255) = null,
-	@mkey_team_1 int = null,
-	@mkey_team_2 int = null
-as begin
-	set nocount on;
-	declare @return int;
-	declare @txm int;
-	begin try
-		insert into match(match_date,match_location) values(@match_date,@match_location);
-		set @return = @@IDENTITY;
-		exec @txm = inserttourxmatch @team_1 = @mteam_1,@team_2=@mteam_2,@key_team_1=@mkey_team_1,@key_team_2=@mkey_team_2;
-		insert into matchxscore(tournamentxmatch_id,match_id) values(@txm,@return);
-	end try
-	begin catch
-		set @return = -1;
-	end catch
-	return @return;
-end
-
 -- It creates a new live, it sets the moment it starts and returns
 -- the id to be used in later actions.
 create procedure createlive
@@ -299,16 +251,17 @@ as begin
 	end catch
 	return @return;
 end
-
+use xfifafantasycup
 -- Assigns to a certain fanatic a powerup.
 create procedure insertuserxlive
-	@userxmatch_id int,
-	@userxinfo_id int
+	@live_id int,
+	@userxinfo_id int,
+	@powerup_id int
 as begin
 	set nocount on;
 	declare @return int;
 	begin try
-		insert into userxlive(livexmatch_id,userxinfo_id) values(@userxmatch_id,@userxinfo_id);
+		insert into userxlive(userxinfo_id,live_id,powerup_id) values(@userxinfo_id,@live_id,@powerup_id);
 		set @return =1;
 	end try
 	begin catch
@@ -316,5 +269,7 @@ as begin
 	end catch
 	return @return;
 end
+
+create procedure insertuserprediction
 
 -- livexaction no es necesario de hacerle un store procedure porque en el web page ya se tiene esa información.

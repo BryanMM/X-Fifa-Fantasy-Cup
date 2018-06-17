@@ -1,0 +1,94 @@
+﻿<div class="container">
+    <div class="row vertical-offset-100">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Create Tournament</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="tab">
+                        <button class="tablinks">Setup Teams</button>
+                        <button class="tablinks">Setup Groups</button>
+                        <button class="tablinks">Setup Stages</button>
+                    </div>
+
+                    <!--Teams tab-->
+                    <div ng-show="teams" class="tabcontent">
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <select class="form-control" ng-model="prov">
+                                                <option value="" disabled selected>Add country</option>
+                                                <option ng-repeat="provi in country" ng-value="provi">{{provi}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit" class="btn btn-danger btn-block" ng-click="addCountry()"><span class="glyphicon glyphicon-plus"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" placeholder="Search player" class="form-control" ng-model="playerSearch" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <select class="form-control" ng-model="searchProv" ng-change="displayList()">
+                                        <option value="" disabled selected>Search by country</option>
+                                        <option ng-repeat="searchProvi in country" ng-value="searchProvi">{{searchProvi}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="vertical-menu-player">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                                    </ul>
+                                </div>
+
+                                
+                            </div>
+                            <div class="col-md-5">
+                                <div class="vertical-menu-selected">
+                                    <div class="panel-group" id="accordion">
+                                        <div class="panel panel-default" ng-repeat="cont in selectCountry" ng-value="cont">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" data-target="#{{cont}}">
+                                                        {{cont}}
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="{{cont}}" class="panel-collapse collapse in" >
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" ng-repeat="sel in playerList.{{cont}}" ng-value="sel">{{sel}}</li>
+                                                </ul>
+                                            </div>                                               
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn" ng-click="goGroups()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Groups tab-->
+                    <div ng-show="groups" class="tabcontent">
+                        <h3>Paris</h3>
+                        <p>Paris is the capital of France.</p>
+                    </div>
+
+                    <!--Stages tab-->
+                    <div ng-show="stages" class="tabcontent">
+                        <h3>Tokyo</h3>
+                        <p>Tokyo is the capital of Japan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

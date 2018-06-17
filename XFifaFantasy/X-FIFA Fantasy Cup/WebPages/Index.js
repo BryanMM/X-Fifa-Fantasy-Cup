@@ -74,13 +74,13 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = false;
 
     $scope.country = [];
-    /*
+    
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
             $scope.country = mydata;
 
-        });*/
+        });
 
     $scope.yearlist = [];
     for (i = 2017; i >= 1900; i--) {

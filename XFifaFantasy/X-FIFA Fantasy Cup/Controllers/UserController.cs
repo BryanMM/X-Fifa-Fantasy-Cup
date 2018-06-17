@@ -10,13 +10,10 @@ using X_FIFA_Fantasy_Cup.Models;
 using X_FIFA_Fantasy_Cup.Logic;
 using System.Data;
 
-
 namespace X_FIFA_Fantasy_Cup.Controllers
 {
     public class UserController : ApiController
-    {
-
-        
+    {        
         [ActionName("login")]
         public JsonResult<DbConnection> login(LoginDetails data)
         {
@@ -69,7 +66,6 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
             }
         }
-
         [HttpPost]
         [ActionName("register")]
         public JsonResult<DbConnection> Register(Fanatic fanatic)
@@ -149,7 +145,6 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 }
             }
         }
-
         [HttpPost]
         [ActionName("register")]
         public JsonResult<DbConnection> adminregister(Admin admin)

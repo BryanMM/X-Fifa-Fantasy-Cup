@@ -122,12 +122,13 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
 
         }
+        /*
         [HttpPost]
         [ActionName("AddMatch")]
         public JsonResult<DbConnection> AddMatch()
         {
 
         }
-
+        */
     }
 }

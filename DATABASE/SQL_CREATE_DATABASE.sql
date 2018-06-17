@@ -79,14 +79,6 @@ CREATE TABLE admin(
 	admin_password varbinary(max) not null
 );
 
-
-CREATE TABLE match(
-	match_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	match_date DATETIME NOT NULL,
-	match_location varchar(255) NOT NULL,
-	match_enable BIT NOT NULL DEFAULT(1)
-);
-
 CREATE TABLE powerup_type(
 	powerup_type_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	powerup_type_name varchar(30) NOT NULL
@@ -149,6 +141,18 @@ create table tournamentxcountry(
 	tournament_id int foreign key references tournament(tournament_id),
 	country_id int foreign key references country(country_id)
 );
+
+CREATE TABLE match(
+	match_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	match_date DATETIME NOT NULL,
+	match_location varchar(255) NOT NULL,
+	match_enable BIT NOT NULL DEFAULT(1),
+	match_score_1 int default(0),
+	match_score_2 int default(0),
+	txc_team_1 int foreign key references tournamentxcountry(tournamentxcountry_id),
+	txc_team_2 int foreign key references tournamentxcountry(tournamentxcountry_id)
+);
+
 
 create table tournamentxplayer(
 	tournamentxplayer_id int identity(1,1) primary key not null,
@@ -228,8 +232,8 @@ declare @date DATE;
 declare @datet DATETIME;
 select @date = CONVERT(date,GETDATE());
 exec @result =  dbo.insertfanatic @f_login='pedro',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth=@date ,@f_password='juantaco',@f_country=1;
-print @result;
-exec @result = dbo.insertadmin @a_username='pedro',@a_name='pedro',@a_last_name='perez',@a_email='security@tacos.com',@a_password='juanito';
+declare @result int;
+exec @result = dbo.insertadmin @a_username='admin',@a_name='pedro',@a_last_name='perez',@a_email='security@tacos.com',@a_password='admin';
 print @result;
 
 insert into powerup_type(powerup_type_name) values('Multiplicador'),('Sumador');

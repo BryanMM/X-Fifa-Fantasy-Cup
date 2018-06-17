@@ -251,7 +251,8 @@ as begin
 	end catch
 	return @return;
 end
-use xfifafantasycup
+use xfifafantasycup;
+go
 -- Assigns to a certain fanatic a powerup.
 create procedure insertuserxlive
 	@live_id int,
@@ -270,6 +271,47 @@ as begin
 	return @return;
 end
 
-create procedure insertuserprediction
 
+-- Creates a new stage, it adds a name to it. 
+-- Returns its ID to be used later.
+create procedure insertstage
+	@stage_name varchar(255) = '',
+	@tournament_id int
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into stage(stage_name) values(@stage_name);
+		set @return = @@IDENTITY;
+		insert into tournamentxstage(stage_id, tournament_id) values(@return,@tournament_id);
+		set @return = @@IDENTITY;
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
+
+create procedure insertadminmatch
+	@match_date DATETIME,
+	@match_location varchar(255),
+	@txs_id int,
+	@txc_team_1 int = null,
+	@txc_team_2 int = null,
+	@sxm_winner1 int = null,
+	@sxm_winner2 int = null,
+	@match_enable bit = 1
+as begin
+	set nocount on;
+	declare @return int;
+	begin try
+		insert into match(match_date,match_location,match_enable,txc_team_1,txc_team_2) values(@match_date,@match_location,@match_enable,@txc_team_1,@txc_team_2);
+		set @return = @@IDENTITY;
+		insert into stagexmatch(winner_1,winner_2,match_id,txs_id) values(@sxm_winner1,@sxm_winner2,@return,@txs_id);
+	end try
+	begin catch
+		set @return = -1;
+	end catch
+	return @return;
+end
 -- livexaction no es necesario de hacerle un store procedure porque en el web page ya se tiene esa información.

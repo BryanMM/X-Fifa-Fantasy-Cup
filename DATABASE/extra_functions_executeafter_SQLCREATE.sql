@@ -319,7 +319,7 @@ end
 -- Retrieves next stage depending on the query, it will return the code of the country as well 
 -- as the name of the country.
 -- It returns a table, the team_1 and team_2 refers to tournamentxcountry and not to country.
-create procedure getnextstage
+alter procedure getnextstage
 	@next_stage int
 as begin
 	set nocount on;
@@ -331,15 +331,19 @@ as begin
 	declare @n_1 varchar(255);
 	declare @n_2 varchar(255);
 	declare @table table(winner_1 int,winner_2 int,match_id int,team_1 int,team_2 int,name_time_1 varchar(255),name_team_2 varchar(255));
-	select distinct @win_1 = sxm.winner_1, @win_2 = sxm.winner_2, @match=sxm.match_id,@t_1=mtc.txc_team_1,@t_2= mtc.txc_team_2 from 
-	stagexmatch as sxm left outer join match as mtc on (sxm.match_id = mtc.match_id) 
+	insert into @table(winner_1,winner_2,match_id,team_1,team_2) select distinct sxm.winner_1,sxm.winner_2,sxm.match_id,mtc.txc_team_1,mtc.txc_team_2 from 
+	tournamentxstage as txs left outer join stagexmatch as sxm on (txs.txs_id = sxm.txs_id) left outer join match as mtc on (sxm.match_id = mtc.match_id) 
 	left outer join tournamentxcountry as txc on (mtc.txc_team_1 = txc.tournamentxcountry_id or mtc.txc_team_2 = txc.tournamentxcountry_id)
 	left outer join country as ctr on (ctr.country_id = txc.tournamentxcountry_id and mtc.txc_team_1 = txc.tournamentxcountry_id )
-	where sxm.txs_id = @next_stage;
-	insert into @table(winner_1,winner_2,match_id,team_1,team_2) values(@win_1,@win_2,@match,@t_1,@t_2);
-	select @n_1 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id) where txc.tournamentxcountry_id = @t_1;
-	select @n_2 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id) where txc.tournamentxcountry_id = @t_2;
-	update @table set name_time_1 = @n_1,name_team_2=@n_2 where match_id = @match;
+	where txs.stage_id = @next_stage;
+	select *  into #temp from @table
+	while exists(select * from #temp)
+		begin
+			select top 1 @t_1 = team_1,@t_2=team_2,@match = match_id from #temp;
+			update @table set name_time_1 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id and txc.tournamentxcountry_id = @t_1) where match_id = @match and txc.tournamentxcountry_id = @t_1;
+			update @table set name_team_2 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id and txc.tournamentxcountry_id = @t_2) where match_id = @match and txc.tournamentxcountry_id = @t_2;
+			delete from #temp where match_id = @match;
+		end
 	select * from @table;
 end
 -- livexaction no es necesario de hacerle un store procedure porque en el web page ya se tiene esa información.

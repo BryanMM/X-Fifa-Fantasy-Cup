@@ -94,7 +94,7 @@ end;
 go;
 
 -- New version of the procedure, it retrieves a table because the FK of userxinfo_id is needed, not just the type.
-alter procedure checkuser
+create procedure checkuser
 	@user_username varchar(8),
 	@user_password varchar(8)
 as begin

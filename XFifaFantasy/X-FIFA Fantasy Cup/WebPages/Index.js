@@ -45,7 +45,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     $scope.goLogin = function () {
         
         $location.path("/adminCalendar");
-
+        /*
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
                 if (promise.data.success === "true") {
@@ -63,7 +63,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     alert(promise.data.detail)
                 }
 
-            });
+            });*/
     }
 });
 
@@ -118,22 +118,24 @@ login.controller("adminCalendar", function ($scope, $rootScope, $location, $http
 
 login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.teams = true;
-    $scope.groups = false;
+    $scope.matches = false;
     $scope.stages = false;
 
-    $scope.goGroups = function () {
+    //Teams configuration
+    $scope.goStages = function () {
         $scope.teams = false;
-        $scope.groups = true;
+        $scope.stages = true;
 
     }
 
     $scope.country = ["Alemania", "USA", "Canada", "China"];
+    /*
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
             $scope.country = mydata;
 
-        });
+        });*/
     
     $scope.selectPlayer = ["1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "99991", "99992", "99993", "99994", "99995", "99969", "99799", "98999", "99999"];
     $scope.selectCountry = [];
@@ -156,11 +158,69 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         }
     }
 
+    $scope.test = [];
+
     $scope.addPlayer = function (person) {
         $scope.playerList[$scope.searchProv].push(person);
-        console.log($scope.playerList);
+        $scope.test = $scope.playerList[$scope.cont];
     }
+
+    $scope.matchList = [];
+
+    //Stages configuration
+    $scope.addMatch = function () {
+        tempvs = $scope.team1 + " vs " + $scope.team2;
+        $scope.matchList.push(tempvs);
+    }
+
+    //Matches configuration
+    $scope.goMatches = function () {
+        $scope.stages = false;
+        $scope.matches = true;
+
+    }
+
+    var matchNumb = 1;
+    $scope.showMatch = [];
     
-   
+    $scope.yearlist = [];
+    for (i = 2017; i >= 1900; i--) {
+        $scope.yearlist.push(i);
+    }
+    $scope.monthlist = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    $scope.daylist1 = [];
+    $scope.daylist2 = [];
+    $scope.daylist3 = [];
+    for (i = 1; i <= 28; i++) {
+        $scope.daylist1.push(i);
+    }
+    $scope.daylist2 = [];
+    for (i = 1; i <= 30; i++) {
+        $scope.daylist2.push(i);
+    }
+    $scope.daylist3 = [];
+    for (i = 1; i <= 31; i++) {
+        $scope.daylist3.push(i);
+    }
+    $scope.chooseDaylist = function () {
+        var monthcheck = ["01", "03", "05", "07", "09", "11"];
+        if ($scope.month == "02") {
+            $scope.daylist = $scope.daylist1;
+        } else if (monthcheck.indexOf($scope.month) > -1) {
+            $scope.daylist = $scope.daylist2;
+        } else {
+            $scope.daylist = $scope.daylist3;
+        }
+    }
+
+    $scope.addFight = function () {
+        $scope.showMatch.push("Match" + matchNumb.toString());
+        $scope.showMatch.push($scope.doneMatch);
+        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
+        $scope.showMatch.push($scope.location);
+        matchNumb += 1;
+    }
+
     
+
 });

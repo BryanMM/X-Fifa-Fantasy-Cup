@@ -13,7 +13,7 @@
 	fanatic_date_create	DATETIME NOT NULL,
 	fanatic_password	varbinary(max) NOT NULL,
 	fanatic_active		BIT NOT NULL DEFAULT (1),
-	fanatic_photo		IMAGE,
+	fanatic_photo		varchar(max),
 	fanatic_description	varchar(300)
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE player(
 	player_team VARCHAR(30) NOT NULL,
 	player_price INT NOT NULL,
 	player_active BIT NOT NULL,
-	player_photo IMAGE NOT NULL
+	player_photo varchar(max) NOT NULL
 );
 
 CREATE TABLE playerxposition(
@@ -88,7 +88,7 @@ CREATE TABLE sponsor(
 	sponsor_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	sponsor_name VARCHAR(30) NOT NULL,
 	sponsor_status BIT NOT NULL,
-	sponsor_photo IMAGE NOT NULL
+	sponsor_photo varchar(max) NOT NULL
 );
 
 CREATE TABLE userxinfo(
@@ -161,12 +161,17 @@ create table tournamentxplayer(
 );
 
 
+create table livexcomment(
+	livexcomment_id int identity(1,1) primary key not null,
+	livexcomment_comment varchar(MAX),
+	live_id int foreign key references live(live_id),
+	powerup_id int foreign key references powerup(powerup_id)
+);
+
 create table livexmatch(
 	livexmatch_id int identity(1,1) primary key not null,
-	livexmatch_comment varchar(MAX),
-	live_id int foreign key references live(live_id),
 	match_id int foreign key references match(match_id),
-	powerup_id int foreign key references powerup(powerup_id)
+	live_id int foreign key references live(live_id)
 );
 
 create table userxlive(
@@ -240,3 +245,13 @@ insert into powerup_type(powerup_type_name) values('Multiplicador'),('Sumador');
 
 alter table live drop column live_end;
 alter table live add live_end DATETIME;
+
+insert into sponsor(sponsor_name,sponsor_status,sponsor_photo) values('Coca Cola',1,'C:/Program Files...');
+insert into tournament(tournament_name,sponsor_id) values('Rusia 2018',1);
+insert into tournamentxcountry(tournament_id,country_id) values(1,1),(1,2);
+insert into stage(stage_name) values('Stage A');
+insert into tournamentxstage(stage_id,tournament_id) values(1,1);
+declare @date datetime;
+set @date = GETDATE()
+exec insertadminmatch @match_date=@date,@match_location='Costa Rica',@txs_id=1,@txc_team_1=1,@txc_team_2=2
+

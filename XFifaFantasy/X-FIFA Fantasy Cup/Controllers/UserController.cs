@@ -49,7 +49,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 constructor.detail_xinfo = (string)dr["user_login"].ToString();
                 constructor.detail_status = (string)dr["user_active"].ToString();
             }
-            if (result > 0)
+            if (result >= 0)
             {
                 constructor.success = "true";
                 
@@ -79,14 +79,15 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertfanatic", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            sqlCmd.Parameters.Add(new SqlParameter("@f_username", fanatic.fanatic_id));
+            sqlCmd.Parameters.Add(new SqlParameter("@f_login", fanatic.fanatic_id));
             sqlCmd.Parameters.Add(new SqlParameter("@f_name", fanatic.fanatic_name));
             sqlCmd.Parameters.Add(new SqlParameter("@f_last_name", fanatic.fanatic_last_name));
             sqlCmd.Parameters.Add(new SqlParameter("@f_email", fanatic.fanatic_email));
-            sqlCmd.Parameters.Add(new SqlParameter("@f_phone", fanatic.fanatic_phone));            
+            sqlCmd.Parameters.Add(new SqlParameter("@f_phone", fanatic.fanatic_phone));
+            System.Diagnostics.Debug.WriteLine("FECHAAAA="+fanatic.fanatic_password);
             sqlCmd.Parameters.Add(new SqlParameter("@f_birth", Convert.ToDateTime(fanatic.fanatic_birth, new CultureInfo("ru-RU"))));
             sqlCmd.Parameters.Add(new SqlParameter("@f_password", fanatic.fanatic_password));
-            sqlCmd.Parameters.Add(new SqlParameter("@f_active", fanatic.fanatic_active));
+            
             sqlCmd.Parameters.Add(new SqlParameter("@f_about", fanatic.fanatic_description));
             sqlCmd.Parameters.Add(new SqlParameter("@f_country", fanatic.fanatic_country));
             if (fanatic.fanatic_photo != null)
@@ -143,7 +144,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
         }
         [HttpPost]
-        [ActionName("register")]
+        [ActionName("adminregister")]
         public JsonResult<DbConnection> adminregister(Admin admin)
         {
             DbConnection constructor = new DbConnection();

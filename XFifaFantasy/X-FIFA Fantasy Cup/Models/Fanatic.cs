@@ -7,7 +7,7 @@ namespace X_FIFA_Fantasy_Cup.Models
 {
     public class Fanatic
     {
-        public int fanatic_id { get; set; }
+        public string fanatic_id { get; set; }
         public string fanatic_login { get; set; }
         public string fanatic_name { get; set; }
         public string fanatic_last_name { get; set; }

@@ -46,13 +46,13 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-        $location.path("/adminCalendar");
-        /*
+       // $location.path("/adminCalendar");
+        
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
                 if (promise.data.success === "true") {
                     UserName = $scope.usr;
-                    if (promise.data.detail === "1") { 
+                    if (promise.data.detail_type === "1") { 
                         $location.path("/adminCalendar");
                     }
                     else {
@@ -65,7 +65,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     alert(promise.data.detail)
                 }
 
-            });*/
+            });
     }
 });
 
@@ -114,20 +114,31 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
 
 
     $scope.subData = function () {
+        console.log({
+            firstName: $scope.fname,
+            lastName: $scope.lname,
+            email: $scope.uemail,
+            phone: $scope.phone,
+            username: $scope.username,
+            password: $scope.pass1,
+            country: $scope.prov.Id,
+            image: $scope.image,
+            birthday: $scope.year.concat("-", $scope.month, "-", $scope.day),
 
+            description: $scope.description
+        });
         if ($scope.pass1 === $scope.pass2) {
             $http.post(Host + "/api/user/register", {
-                firstName: $scope.fname,
-                lastName: $scope.lname,
-                email: $scope.uemail,
-                phone: $scope.phone,
-                username: $scope.username,
-                password: $scope.pass1,
-                country: $scope.prov.Id,
-                image: $scope.image,
-                birthday: $scope.year.concat("-", $scope.month, "-", $scope.day),
-                
-                description: $scope.description
+                fanatic_name: $scope.fname,
+                fanatic_last_name: $scope.lname,
+                fanatic_email: $scope.uemail,
+                fanatic_phone: $scope.phone,
+                fanatic_id: $scope.username,
+                fanatic_password: $scope.pass1,
+                fanatic_country: $scope.prov.Id,
+                fanatic_photo: $scope.image,
+                fanatic_birth: $scope.day.concat("/", $scope.month, "/", $scope.year).toString(),
+                fanatic_description: $scope.description
             }).
                 then((promise) => {
                     if (promise.data.success === "true") {

@@ -62,7 +62,7 @@
                                             </div>
                                             <div id="{{cont}}" class="panel-collapse collapse in" >
                                                 <ul class="list-group">
-                                                    <li class="list-group-item" ng-repeat="sel in playerList.{{cont}}" ng-value="sel">{{sel}}</li>
+                                                    <li class="list-group-item" ng-repeat="sel in test" ng-value="sel">{{sel}}</li>
                                                 </ul>
                                             </div>                                               
                                         </div>
@@ -71,21 +71,103 @@
 
                             </div>
                             <div class="col-md-1">
-                                <button type="submit" class="btn" ng-click="goGroups()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                <button type="submit" class="btn" ng-click="goStages()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                             </div>
                         </div>
                     </div>
 
-                    <!--Groups tab-->
-                    <div ng-show="groups" class="tabcontent">
-                        <h3>Paris</h3>
-                        <p>Paris is the capital of France.</p>
-                    </div>
 
                     <!--Stages tab-->
                     <div ng-show="stages" class="tabcontent">
-                        <h3>Tokyo</h3>
-                        <p>Tokyo is the capital of Japan.</p>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <select class="form-control" ng-model="team1">
+                                        <option value="" disabled selected>Search team 1</option>
+                                        <option ng-repeat="team1count in selectCountry" ng-value="team1count">{{team1count}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" ng-model="team2">
+                                        <option value="" disabled selected>Search team 2</option>
+                                        <option ng-repeat="team2count in selectCountry" ng-value="team2count">{{team2count}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-danger btn-block" ng-click="addMatch()">Add Match</button>
+                                </div>
+
+                            </div>
+                            <div class="col-md-5">
+                                <div class="vertical-menu-player">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="match in matchList" ng-value="match">{{match}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn" ng-click="goMatches()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Matches tab-->
+
+                    <div ng-show="matches" class="tabcontent">
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <select class="form-control" ng-model="doneMatch">
+                                        <option value="" disabled selected>Search Match</option>
+                                        <option ng-repeat="setMatch in matchList" ng-value="setMatch">{{setMatch}}</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div><label for="bdate">Date:</label></div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <select class="form-control" id="year" ng-model="year">
+                                                <option value="" disabled selected>Year</option>
+                                                <option ng-repeat="y in yearlist">{{y}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control" id="month" ng-model="month" ng-change="chooseDaylist()">
+                                                <option value="" disabled selected>Month</option>
+                                                <option ng-repeat="m in monthlist">{{m}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control" id="day" ng-model="day">
+                                                <option value="" disabled selected>Day</option>
+                                                <option ng-repeat="d in daylist">{{d}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" placeholder="Location" class="form-control" ng-model="location" required />
+                                </div>
+
+                                <div class="form-group-sub">
+                                    <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="addFight()" value="Submit">
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-5">
+                                <div class="vertical-menu-player">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="smatch in showMatch" ng-value="smatch">{{smatch}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn" ng-click=""><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -246,11 +246,37 @@ set @datet = GETDATE()
 exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=2,@tournament_id=1;
 
 set @datet = GETDATE()
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
-
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=
 set @datet = GETDATE()
 exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1
 
 
 set @datet = GETDATE()
 exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1
+
+declare @date DATETIME;
+select @date = CONVERT(date,GETDATE());
+insert into player values('1234','Juan' ,'Núñez',@date,180,85,'Pollitos FC',10,1,'C:/program files'),('3456','Carlos' ,'Núñez',@date,180,85,'Pollitos FC',10,1,'C:/program files');
+insert into playerxposition values(1,'Goalkeeper'),(2,'Fullback'),(3,'Midfielder'),(4,'Forward');
+insert into playerxinfo(country_id,playerxposition_id,player_id) values(1,2,'1234'),(1,3,'3456');
+insert into eventmatch(action_name,action_value) values('Goal goalkeeper',8),
+														('Goal Fullback',6),
+														('Goal Midfielder',4),
+														('Goal Forward',3),
+														('Assistance Goalkeeper',8),
+														('Assistance Fullback',6),
+														('Assistance Midfielder',4),
+														('Assistance Forward',3),
+														('Match Headline',2),
+														('Match In-Change',1),
+														('Match Out-Change',-1),
+														('Yellow Card',-1),
+														('Expulsion',-2),
+														('Penalty Stop',2),
+														('Goalkeeper without goals',2),
+														('Fullback wihtout goals',1);
+insert into userxfantasy(userxinfo_id,tournament_id,playerxinfo_id) values(1,1,1),(1,1,2);
+declare @livedate DATE;
+set @livedate = GETDATE();
+exec createlive @start=@livedate,@match_id=2;
+insert into livexaction(action_id,live_id,playerxinfo_id) values(4,1,1),(2,1,2);

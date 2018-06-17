@@ -210,14 +210,9 @@ CREATE TABLE userxscore(
 	txc_team2 int foreign key references tournamentxcountry(tournamentxcountry_id)
 );
 
-create table stage(
-	stage_id int identity(1,1) primary key not null,
-	stage_name varchar(255)
-);
-
 create table tournamentxstage(
 	txs_id int identity(1,1) primary key not null,
-	stage_id int foreign key references stage(stage_id),
+	stage_id int,
 	tournament_id int foreign key references tournament(tournament_id)
 );
 

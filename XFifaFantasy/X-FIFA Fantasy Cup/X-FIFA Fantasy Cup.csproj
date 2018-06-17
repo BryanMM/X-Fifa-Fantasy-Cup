@@ -84,6 +84,7 @@
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="WebPages\Admin\AdminCalendar.html" />
+    <Content Include="WebPages\Admin\AdminProfile.html" />
     <Content Include="WebPages\Admin\CreateTournament.html" />
     <Content Include="WebPages\Index.css" />
     <Content Include="WebPages\Index.html" />

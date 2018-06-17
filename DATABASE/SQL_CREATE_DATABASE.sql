@@ -76,7 +76,8 @@ CREATE TABLE admin(
 	admin_last_name varchar(30) not null,
 	admin_email varchar(255) not null,
 	admin_date_create DATETIME not null,
-	admin_password varbinary(max) not null
+	admin_password varbinary(max) not null,
+	admin_active int default(1);
 );
 
 CREATE TABLE powerup_type(

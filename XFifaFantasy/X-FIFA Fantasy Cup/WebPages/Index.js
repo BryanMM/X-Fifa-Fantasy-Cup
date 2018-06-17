@@ -25,6 +25,10 @@ login.config(function ($routeProvider) {
         .when("/createTournament", {
             templateUrl: "Admin/CreateTournament.html",
             controller: "createTour"
+        })
+        .when("/adminProfile", {
+            templateUrl: "Admin/AdminProfile.html",
+            controller: "adminProfile"
         });
 });
 
@@ -206,7 +210,11 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
     $scope.addPlayer = function (person) {
         $scope.playerList[$scope.searchProv].push(person);
-        $scope.test = $scope.playerList[$scope.cont];
+        console.log($scope.playerList);
+    }
+
+    $scope.testy = function (tempy) {
+        $scope.test = $scope.playerList[tempy];
     }
 
     $scope.matchList = [];
@@ -265,6 +273,8 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         matchNumb += 1;
     }
 
-    
+    login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
+        
+    });
 
 });

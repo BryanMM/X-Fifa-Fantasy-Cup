@@ -38,14 +38,14 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             {
                 constructor.success = "true";
 
-                constructor.detail = result.ToString();
+                constructor.detail_type = result.ToString();
 
                 return Json(constructor);
             }
             else
             {
                 constructor.success = "false";
-                constructor.detail = "Error while inserting the tournament";
+                constructor.detail_type = "Error while inserting the tournament";
                 return Json(constructor);
 
             }
@@ -74,7 +74,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             {
                 constructor.success = "true";
 
-                constructor.detail = result.ToString();
+                constructor.detail_type = result.ToString();
 
                 return Json(constructor);
             }
@@ -82,7 +82,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             else
             {
                 constructor.success = "false";
-                constructor.detail = "Error while inserting the tournament";
+                constructor.detail_type = "Error while inserting the tournament";
                 return Json(constructor);
 
             }
@@ -108,7 +108,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             {
                 constructor.success = "true";
 
-                constructor.detail = "Successfully added the country";
+                constructor.detail_type = "Successfully added the country";
 
                 return Json(constructor);
             }
@@ -116,7 +116,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             else
             {
                 constructor.success = "false";
-                constructor.detail = "Error while trying to add the country";
+                constructor.detail_type = "Error while trying to add the country";
                 return Json(constructor);
 
             }

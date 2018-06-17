@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -9,13 +9,14 @@ using System.Web.Http.Results;
 using X_FIFA_Fantasy_Cup.Models;
 using X_FIFA_Fantasy_Cup.Logic;
 using System.Data;
-using X_FIFA_Fantasy_Cup.Logic;
 
 
 namespace X_FIFA_Fantasy_Cup.Controllers
 {
     public class UserController : ApiController
-    {        
+    {
+       
+
         [ActionName("login")]
         public JsonResult<DbConnection> login(LoginDetails data)
         {
@@ -23,7 +24,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             if (data.username == "" | data.password == "")
             {
                 constructor.success = "false";
-                constructor.detail = "The given data is not complete";
+                constructor.detail_type = "The given data is not complete";
                 return Json(constructor);
             }            
             SqlConnection myConnection = new SqlConnection();
@@ -36,25 +37,34 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
             sqlCmd.Parameters.Add(returnparam);
             sqlCmd.ExecuteNonQuery();
-            int result = (int)returnparam.Value;
-            System.Diagnostics.Debug.WriteLine(result);
-            myConnection.Close();
+            SqlDataReader dr = sqlCmd.ExecuteReader();
+            var result = (int)returnparam.Value;
+           // System.Diagnostics.Debug.WriteLine();
+            
+           
+            while (dr.Read())
+            {
+                constructor.success = "";
+                constructor.detail_type = (string) dr["user_login"].ToString();
+                constructor.detail_xinfo = (string)dr["user_login"].ToString();
+                constructor.detail_status = (string)dr["user_active"].ToString();
+            }
             if (result > 0)
             {
                 constructor.success = "true";
-                constructor.detail = result.ToString();
+                
                 return Json(constructor);
             }
             else if (result == -3)
             {
                 constructor.success = "false";
-                constructor.detail = "The username and password don't match";
+                
                 return Json(constructor);
             }
             else
             {
                 constructor.success = "false";
-                constructor.detail = "The user doesn't exist";
+                
                 return Json(constructor);
 
             }
@@ -74,7 +84,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.Parameters.Add(new SqlParameter("@f_last_name", fanatic.fanatic_last_name));
             sqlCmd.Parameters.Add(new SqlParameter("@f_email", fanatic.fanatic_email));
             sqlCmd.Parameters.Add(new SqlParameter("@f_phone", fanatic.fanatic_phone));            
-            sqlCmd.Parameters.Add(new SqlParameter("@f_birth", fanatic.fanatic_birth));
+            sqlCmd.Parameters.Add(new SqlParameter("@f_birth", Convert.ToDateTime(fanatic.fanatic_birth, new CultureInfo("ru-RU"))));
             sqlCmd.Parameters.Add(new SqlParameter("@f_password", fanatic.fanatic_password));
             sqlCmd.Parameters.Add(new SqlParameter("@f_active", fanatic.fanatic_active));
             sqlCmd.Parameters.Add(new SqlParameter("@f_about", fanatic.fanatic_description));
@@ -91,20 +101,20 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 {
                     constructor.success = "true";
 
-                    constructor.detail = result.ToString();
+                    constructor.detail_type = result.ToString();
 
                     return Json(constructor);
                 }
                 else if (result == -3)
                 {
                     constructor.success = "false";
-                    constructor.detail = "The username and password don't match";
+                    constructor.detail_type = "The username and password don't match";
                     return Json(constructor);
                 }
                 else
                 {
                     constructor.success = "false";
-                    constructor.detail = "The user doesn't exist";
+                    constructor.detail_type = "The user doesn't exist";
                     return Json(constructor);
                 }
             }
@@ -119,14 +129,14 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 {
                     constructor.success = "true";
 
-                    constructor.detail = "";
+                    constructor.detail_type = "";
 
                     return Json(constructor);
                 }
                 else
                 {
                     constructor.success = "false";
-                    constructor.detail = "User already exists";
+                    constructor.detail_type = "User already exists";
                     return Json(constructor);
 
                 }
@@ -156,13 +166,13 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             if (result > 0)
             {
                 constructor.success = "true";
-                constructor.detail = "";
+                constructor.detail_type = "";
                 return Json(constructor);
             }
             else
             {
                 constructor.success = "false";
-                constructor.detail = "The user already exist";
+                constructor.detail_type = "The user already exist";
                 return Json(constructor);
 
             }

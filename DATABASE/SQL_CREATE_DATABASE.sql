@@ -77,7 +77,7 @@ CREATE TABLE admin(
 	admin_email varchar(255) not null,
 	admin_date_create DATETIME not null,
 	admin_password varbinary(max) not null,
-	admin_active int default(1);
+	admin_active int default(1)
 );
 
 CREATE TABLE powerup_type(
@@ -242,18 +242,18 @@ insert into powerup_type(powerup_type_name) values('Multiplicador'),('Sumador');
 insert into sponsor(sponsor_name,sponsor_status,sponsor_photo) values('Coca Cola',1,'C:/Program Files...');
 insert into tournament(tournament_name,sponsor_id) values('Rusia 2018',1);
 insert into tournamentxcountry(tournament_id,country_id) values(1,1),(1,2),(1,3);
-declare @datet DATETIME;
-set @datet = GETDATE();
+
+set @datet = GETDATE()
 exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=2,@tournament_id=1;
 
-set @datet = GETDATE();
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
-set @datet = GETDATE();
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1
 
 
-set @datet = GETDATE();
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1;
+set @datet = GETDATE()
+exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1
 
 declare @date DATETIME;
 select @date = CONVERT(date,GETDATE());

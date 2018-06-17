@@ -323,13 +323,9 @@ create procedure getnextstage
 	@next_stage int
 as begin
 	set nocount on;
-	declare @win_1 int;
-	declare @win_2 int;
 	declare @match int;
 	declare @t_1 int;
 	declare @t_2 int;
-	declare @n_1 varchar(255);
-	declare @n_2 varchar(255);
 	declare @table table(winner_1 int,winner_2 int,match_id int,team_1 int,team_2 int,name_time_1 varchar(255),name_team_2 varchar(255));
 	insert into @table(winner_1,winner_2,match_id,team_1,team_2) select distinct sxm.winner_1,sxm.winner_2,sxm.match_id,mtc.txc_team_1,mtc.txc_team_2 from 
 	tournamentxstage as txs left outer join stagexmatch as sxm on (txs.txs_id = sxm.txs_id) left outer join match as mtc on (sxm.match_id = mtc.match_id) 

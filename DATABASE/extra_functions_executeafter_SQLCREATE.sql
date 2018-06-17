@@ -191,7 +191,7 @@ as begin
 	declare @return int;
 	begin try
 		insert into tournamentxplayer(tournamentxcountry_id,player_id) values(@tourxcountry_id,@player_id);
-		set @return = 1;
+		set @return = @@IDENTITY;
 	end try
 	begin catch
 		set @return =-1;

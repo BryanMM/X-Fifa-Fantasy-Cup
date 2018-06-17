@@ -1,4 +1,6 @@
 ﻿var UserName = "";
+var UserInfo = "";
+var Activity = 0;
 var Host = "http://localhost:65049";
 
 var login = angular.module("loginApp", ["ngRoute"]);
@@ -72,6 +74,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = false;
 
     $scope.country = [];
+    
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
@@ -79,9 +82,39 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
 
         });
 
+    $scope.yearlist = [];
+    for (i = 2017; i >= 1900; i--) {
+        $scope.yearlist.push(i);
+    }
+    $scope.monthlist = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    $scope.daylist1 = [];
+    $scope.daylist2 = [];
+    $scope.daylist3 = [];
+    for (i = 1; i <= 28; i++) {
+        $scope.daylist1.push(i);
+    }
+    $scope.daylist2 = [];
+    for (i = 1; i <= 30; i++) {
+        $scope.daylist2.push(i);
+    }
+    $scope.daylist3 = [];
+    for (i = 1; i <= 31; i++) {
+        $scope.daylist3.push(i);
+    }
+    $scope.chooseDaylist = function () {
+        var monthcheck = ["01", "03", "05", "07", "09", "11"];
+        if ($scope.month == "02") {
+            $scope.daylist = $scope.daylist1;
+        } else if (monthcheck.indexOf($scope.month) > -1) {
+            $scope.daylist = $scope.daylist2;
+        } else {
+            $scope.daylist = $scope.daylist3;
+        }
+    }
+
 
     $scope.subData = function () {
-        console.log($scope.date);
+
         if ($scope.pass1 === $scope.pass2) {
             $http.post(Host + "/api/user/register", {
                 firstName: $scope.fname,
@@ -92,7 +125,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
                 password: $scope.pass1,
                 country: $scope.prov.Id,
                 image: $scope.image,
-                birthday: $scope.date,
+                birthday: $scope.year.concat("-", $scope.month, "-", $scope.day),
                 
                 description: $scope.description
             }).
@@ -122,9 +155,9 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.stages = false;
 
     //Teams configuration
-    $scope.goStages = function () {
+    $scope.goMatches = function () {
         $scope.teams = false;
-        $scope.stages = true;
+        $scope.matches = true;
 
     }
 
@@ -174,9 +207,9 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
 
     //Matches configuration
-    $scope.goMatches = function () {
-        $scope.stages = false;
-        $scope.matches = true;
+    $scope.goStages = function () {
+        $scope.matches = false;
+        $scope.stages = true;
 
     }
 

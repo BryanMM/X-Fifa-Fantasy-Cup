@@ -34,8 +34,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 results.Add(tmp);
             }    
             myConnection.Close();
-            return Json(results);
-            
+            return Json(results);            
         }
         [HttpGet]
         [ActionName("players")]

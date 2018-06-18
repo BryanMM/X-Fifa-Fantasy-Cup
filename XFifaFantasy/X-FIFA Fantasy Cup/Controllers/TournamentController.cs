@@ -15,6 +15,28 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 {
     public class TournamentController : ApiController
     {
+        [HttpGet]
+        public JsonResult<List<Sponsor>> Sponsor()
+        {
+            List<Sponsor> results = new List<Sponsor>();
+            Sponsor tmp = null;
+            string action = "SELECT * FROM SPONSOR";
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            myConnection.Open();
+            SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+            sqlCmd.CommandType = CommandType.Text;
+            var reader = sqlCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                tmp = new Sponsor();
+                tmp.sponsor_id = (int)reader["sponsor_id"];
+                tmp.sponsor_name = (string)reader["sponsor_name"];
+                results.Add(tmp);
+            }
+            myConnection.Close();
+            return Json(results);
+        }
         [HttpPost]
         [ActionName("AddPowerup")]
         public JsonResult<DbConnection> AddPowerup(Powerup powerup)

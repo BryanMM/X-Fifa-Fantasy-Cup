@@ -62,7 +62,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       //$location.path("/userCalendar");
+       $location.path("/userCalendar");
         
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -251,7 +251,6 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.country = $scope.selectPlayer;*/
     $scope.selectCountry = [];
     $scope.selectCountId = [];
-    var temp = { "Germany": ["1", "2"], "USA": ["1", "2"], "USA": ["1", "2"], "China": ["1", "2"] };
     $scope.avPlayers = {};
     $scope.showList = [];
     $scope.playerList = {};
@@ -493,10 +492,10 @@ login.controller("adminProfile", function ($scope, $rootScope, $location, $http)
     }).
         then((promise) => {
             let mydata = promise.data;
-            $scope.fname = mydata.name;
-            $scope.lname = mydata.lastname;
-            $scope.uemail = mydata.email;
-            $scope.usernameE = mydata.username;
+            $scope.fname = mydata.fanatic_name;
+            $scope.lname = mydata.fanatic_last_name;
+            $scope.uemail = mydata.fanatic_email;
+            $scope.usernameE = mydata.fanatic_login;
         });
 });
 
@@ -512,16 +511,16 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
     }).
         then((promise) => {
             let mydata = promise.data;
-            $scope.fname = mydata.name;
-            $scope.lname = mydata.lastname;
-            $scope.ucountry = mydata.country;
-            $scope.uemail = mydata.email;
-            $scope.uphone = mydata.phone;
-            $scope.bday = mydata.birthday;
-            $scope.usernameu = mydata.username;
-            $scope.userID = mydata.ID;
-            $scope.regdate = mydata.registrationdate;
-            $scope.descript = mydata.description;
+            $scope.fname = mydata.fanatic_name;
+            $scope.lname = mydata.fanatic_last_name;
+            $scope.ucountry = mydata.fanatic_country;
+            $scope.uemail = mydata.fanatic_email;
+            $scope.uphone = mydata.fanatic_phone;
+            $scope.bday = mydata.fanatic_birthdate;
+            $scope.usernameu = mydata.fanatic_login;
+            $scope.userID = mydata.fanatic_id;
+            $scope.regdate = mydata.fanatic_date_create;
+            $scope.descript = mydata.fanatic_description;
         });
 });
 
@@ -529,10 +528,18 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
 login.controller("subTournament", function ($scope, $rootScope, $location, $http) {
     $scope.playerSearch;
 
-    $scope.selectCountry;
-    $scope.showList;
+    $scope.tempC = [{ "Id": "1", "Name": "Germany" }, { "Id": "2", "Name": "China" }, { "Id": "3", "Name": "USA" }];
+    $scope.tempP = [{ "player_id": "1", "player_name": "Cristiano Ronaldo", "player_country": "Germany", "position": "Forward", "statistics": null, "price": 30 }, { "player_id": "2", "player_name": "Keylor Navas", "player_country": "Costa Rica", "position": "Goaly", "statistics": null, "price": 20 }];
+    
+
+    $scope.selectCountry = $scope.tempC;
+    $scope.showList = [];
 
     $scope.displayList = function () {
+        $scope.showList = $scope.tempP;
+    }
+
+    $scope.addPlayer = function () {
 
     }
 });

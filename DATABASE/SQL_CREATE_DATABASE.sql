@@ -279,5 +279,9 @@ insert into eventmatch(action_name,action_value) values('Goal goalkeeper',8),
 insert into userxfantasy(userxinfo_id,tournament_id,playerxinfo_id) values(1,1,1),(1,1,2);
 declare @livedate DATE;
 set @livedate = GETDATE();
-exec createlive @start=@livedate,@match_id=2;
+exec createlive @start=@livedate,@match_id=3;
 insert into livexaction(action_id,live_id,playerxinfo_id) values(4,1,1),(2,1,2);
+
+declare @res int;
+exec @res = createtournament @tournament_name='Qatar 2018',@sponsor_id=1
+print @res;

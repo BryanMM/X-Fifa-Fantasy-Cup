@@ -108,18 +108,18 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
         }
         [HttpPost]
-        [ActionName("Add")]
+        [ActionName("addcountry")]
         public JsonResult<DbConnection> AddCountry(Tournament tournament)
         {
             int result = new int();
             DbConnection constructor = new DbConnection();
-            int t_id = tournament.tournament_id;
+            int t_id = (int)Int32.Parse(tournament.tournament_id.ToString());
             List<tourmamentxcountry> coun = tournament.countries;
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            myConnection.Open();
             foreach (var i in coun)
             {
-                SqlConnection myConnection = new SqlConnection();
-                myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                myConnection.Open();
                 SqlCommand sqlCmd = new SqlCommand("inserttourxcountry", myConnection);
                 sqlCmd.CommandType = CommandType.StoredProcedure;
                 System.Diagnostics.Debug.WriteLine("cosoo:" + i.country_id + "tid:" + t_id);
@@ -135,14 +135,14 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 catch (SqlException)
                 {
                 }
-                myConnection.Close();
+                
                 result = (int)returnparam.Value;
                 i.tournamentxcountry_id = (int)returnparam.Value;
                 constructor.tournamentxcountry.Add(result);
                 List<int> plays = i.players;
                 foreach (var j in plays)
                 {
-                    myConnection.Open();
+                    
                     SqlCommand sqlCmdtmp = new SqlCommand("inserttourplayer", myConnection);
                     sqlCmdtmp.CommandType = CommandType.StoredProcedure;
 
@@ -156,6 +156,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
                 }
             }
+            myConnection.Close();
+            constructor.success = "true";
             return Json(constructor);
         }
 
@@ -172,6 +174,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertadminmatch", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
+            //System.Diagnostics.Debug.WriteLine(DateTime.ParseExact(match.match_date, "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture));
             sqlCmd.Parameters.Add(new SqlParameter("@match_date", Convert.ToDateTime(match.match_date, new CultureInfo("ru-RU"))));
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));

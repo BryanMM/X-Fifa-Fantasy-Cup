@@ -184,11 +184,11 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         
         $http.post(Host + "/api/tournament/create", {
             tournament_name: $scope.tourName,
-            sponsor_id: 1
+            sponsor_id: $scope.spon.sponsor_id
         }).
             then((promise) => {
                 if (promise.data.success === "true") {
-                    tourID = promise.data.detail_type;
+                    tourID = parseInt(promise.data.detail_type, 10);
                     $scope.name = false;
                     $scope.teams = true;
                 }
@@ -228,7 +228,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             check1 = $scope.selectCountry[it1];
             
         }
-        $scope.showList = avPlayers[it1];
+        $scope.showList = $scope.avPlayers[check1];
     }
 
     $scope.addCountry = function () {
@@ -247,7 +247,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
             }).
                 then((promise) => {
-                    $scope.avPlayers[$scope.prov.Name] = promise.data.player;
+                    $scope.avPlayers[$scope.prov.Name] = promise.data;
                     
                 });
         }
@@ -352,7 +352,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
             $http.post(Host + "/api/tournament/addmatch", {
                 "tournament_id": tourID,
-                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day),
+                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
                 "stage_id": "1",
                 "txc_team1": $scope.selectCountId[it1],
@@ -370,7 +370,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         $scope.availableCountry.push(xmatchName);
                         $scope.showMatch.push("Match" + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + $scope.team2);
-                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
+                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);
                         matchNumb += 1;
                     }
@@ -398,7 +398,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
             $http.post(Host + "/api/tournament/addmatch", {
                 "tournament_id": tourID,
-                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day),
+                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
                 "stage_id": "1",
                 "txc_team1": "",
@@ -416,18 +416,13 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         $scope.availableCountry.push(xmatchName);
                         $scope.showMatch.push("Match" + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + $scope.team2);
-                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
+                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);
                         matchNumb += 1;
                     }
                 });
         }
 
-        $scope.showMatch.push("Match" + matchNumb.toString());
-        $scope.showMatch.push($scope.doneMatch);
-        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
-        $scope.showMatch.push($scope.location);
-        matchNumb += 1;
     }
 
     

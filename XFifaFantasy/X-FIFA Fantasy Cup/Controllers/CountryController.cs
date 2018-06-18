@@ -36,7 +36,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Close();
             return Json(results);            
         }
-        [HttpGet]
+        [HttpPost]
         [ActionName("players")]
         public JsonResult<List<Player>> players(Player player)
         {
@@ -44,14 +44,16 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             Player tmp = null;
             string action = "select * from playerxinfo full outer join player on playerxinfo.player_id = player.player_id where playerxinfo.country_id"+" = "+ player.country_id+" and player.player_active = "+player.player_active;
             SqlConnection myConnection = new SqlConnection();
-            myConnection.Open();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
             SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+            myConnection.Open();
             sqlCmd.CommandType = CommandType.Text;
             var reader = sqlCmd.ExecuteReader();
             while (reader.Read())
             {
                 tmp = new Player();
-                tmp.player_id = (int)reader["player_id"];
+                tmp.player_id = (string)reader["player_id"];
                 tmp.player_name = (string)reader["player_name"]+" "+(string)reader["player_last_name"];
                 results.Add(tmp);
             }

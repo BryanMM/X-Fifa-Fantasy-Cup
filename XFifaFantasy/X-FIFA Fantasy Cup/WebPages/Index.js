@@ -217,9 +217,18 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.avPlayers = {};
     $scope.showList = [];
     $scope.playerList = {};
+    $scope.playerId = {};
 
     $scope.displayList = function () {
-        $scope.showList = avPlayers[$scope.searchProv];
+        
+        var it1 = -1;
+        var check1 = "";
+        while (check1 != $scope.searchProv) {
+            it1 += 1;
+            check1 = $scope.selectCountry[it1];
+            
+        }
+        $scope.showList = avPlayers[it1];
     }
 
     $scope.addCountry = function () {
@@ -230,6 +239,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             $scope.selectCountry.push($scope.prov.Name);
             $scope.selectCountId.push($scope.prov.Id);
             $scope.playerList[$scope.prov.Name] = [];
+            $scope.playerId[$scope.prov.Name] = [];
 
             $http.post(Host + "/api/country/players", {
                 "country_id": $scope.prov.Id,
@@ -245,11 +255,12 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     
 
     $scope.addPlayer = function (person) {
-        if ($scope.playerList[$scope.searchProv].includes(person)) {
+        if ($scope.playerList[$scope.searchProv].includes(person.player_name)) {
 
         }
         else {
-            $scope.playerList[$scope.searchProv].push(person);
+            $scope.playerList[$scope.searchProv].push(person.player_name);
+            $scope.playerId[$scope.searchProv].push(person.player_id);
         }
     }
 
@@ -260,7 +271,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         $scope.sendList = [];
         var i;
         for (i = 0; i < $scope.selectCountry.length; i++) {
-            var tempJson = { "country_id": $scope.selectCountId[i], "players": $scope.playerList[$scope.selectCountry[i]] };
+            var tempJson = { "country_id": $scope.selectCountId[i], "players": $scope.playerId[$scope.selectCountry[i]] };
             $scope.sendList.push(tempJson);
 
         }
@@ -323,17 +334,19 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.addFight = function () {
 
         if ($scope.selectCountry.includes($scope.team1)) {
-            var it1 = 0;
-            var it2 = 0;
+            var it1 = -1;
+            var it2 = -1;
             var check1 = "";
             var check2 = "";
             while (check1 != $scope.team1) {
-                check1 = $scope.selectCountry[it1];
                 it1 += 1;
+                check1 = $scope.selectCountry[it1];
+               
             }
             while (check2 != $scope.team2) {
-                check2 = $scope.selectCountry[it2];
                 it2 += 1;
+                check2 = $scope.selectCountry[it2];
+               
             }
             
 
@@ -368,17 +381,19 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
         }
         else {
-            var it1 = 0;
-            var it2 = 0;
+            var it1 = -1;
+            var it2 = -1;
             var check1 = "";
             var check2 = "";
             while (check1 != $scope.team1) {
-                check1 = $scope.availableCountry[it1];
                 it1 += 1;
+                check1 = $scope.availableCountry[it1];
+                
             }
             while (check2 != $scope.team2) {
-                check2 = $scope.availableCountry[it2];
                 it2 += 1;
+                check2 = $scope.availableCountry[it2];
+                
             }
 
             $http.post(Host + "/api/tournament/addmatch", {

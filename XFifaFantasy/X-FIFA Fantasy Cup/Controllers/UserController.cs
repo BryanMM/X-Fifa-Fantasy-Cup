@@ -180,6 +180,44 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             
 
         }
-        
+
+        [HttpGet]
+        public JsonResult<Fanatic> GetUser(DbConnection dbConnection)
+        {
+            Fanatic result = new Fanatic();
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            if (dbConnection.detail_type=="1")
+            {
+                string action = "SELECT * FROM USERXINFO FULL OUTER JOIN FANATIC ON USERXINFO.FANATIC_LOGIN = FANATIC.FANATIC_LOGIN";
+
+                myConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+
+
+                sqlCmd.CommandType = CommandType.Text;
+                var reader = sqlCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.fanatic_name = (string)reader["fanatic_name"];
+                    result.fanatic_last_name = (string)reader["fanatic_last_name"];
+                    result.fanatic_birth = (string)reader["fanatic_birth"];
+                    result.fanatic_date_create = (string)reader["fanatic_date_create"];
+                    result.fanatic_description = (string)reader["fanatic_description"];
+                    result.fanatic_email = (string)reader["fanatic_email"];
+                    result.fanatic_id = (string)reader["fanatic_login"];                   
+                }
+                myConnection.Close();
+                return Json(result);
+            }
+            else
+            {
+                return Json(result);
+
+            }            
+        }
+
+
+
     }
 }

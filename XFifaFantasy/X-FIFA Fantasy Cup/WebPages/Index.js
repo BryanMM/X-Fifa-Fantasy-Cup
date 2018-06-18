@@ -165,72 +165,113 @@ login.controller("adminCalendar", function ($scope, $rootScope, $location, $http
 });
 
 login.controller("createTour", function ($scope, $rootScope, $location, $http) {
-    $scope.teams = true;
+    $scope.name = true;
+    $scope.teams = false;
     $scope.matches = false;
     $scope.stages = false;
+    var tourID = "";
 
-    //Teams configuration
-    $scope.goMatches = function () {
-        $scope.teams = false;
-        $scope.matches = true;
+    //Names Configuration
+
+    $http.get(Host + "/api/tournament/sponsor").
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.sponsor = mydata;
+
+        });
+
+    $scope.goTeams = function () {
+        
+        $http.post(Host + "/api/tournament/create", {
+            tournament_name: $scope.tourName,
+            sponsor_id: $scope.spon.Id
+        }).
+            then((promise) => {
+                if (promise.data.success === "true") {
+                    tourID = promise.data.detail_type;
+                    $scope.name = false;
+                    $scope.teams = true;
+                }
+            });
 
     }
+    
 
-    $scope.country = ["Alemania", "USA", "Canada", "China"];
-    /*
+    //Teams configuration
+    
+
+    $scope.country = [];
+    
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
             $scope.country = mydata;
 
-        });*/
+        });
     
-    $scope.selectPlayer = ["1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "99991", "99992", "99993", "99994", "99995", "99969", "99799", "98999", "99999"];
+    $scope.selectPlayer = [{ "Id": "1", "Name": "Germany" }, { "Id": "2", "Name": "China" }, { "Id": "3", "Name": "USA" }];
+    $scope.country = $scope.selectPlayer;
     $scope.selectCountry = [];
+    $scope.selectCountId = [];
+    var temp = { "Germany" : ["1", "2"], "USA" : ["1", "2"], "USA" : ["1", "2"], "China": ["1", "2"] };
+    $scope.showList = [];
     $scope.playerList = {};
-    var temp = { "Alemania" : ["1", "2"], "USA" : ["1", "2"], "Canada" : ["1", "2"], "China": ["1", "2"] };
-    $scope.showList = []
 
     $scope.displayList = function () {
-        var temp2 = $scope.searchProv;
-        $scope.showList = temp[temp2];
+        $scope.showList = temp[$scope.searchProv];
     }
 
     $scope.addCountry = function () {
-        if ($scope.selectCountry.includes($scope.prov)) {
+        if ($scope.selectCountry.includes($scope.prov.Name)) {
 
         }
         else {
-            $scope.selectCountry.push($scope.prov);
-            $scope.playerList[$scope.prov] = [];
+            $scope.selectCountry.push($scope.prov.Name);
+            $scope.selectCountId.push($scope.prov.Id);
+            $scope.playerList[$scope.prov.Name] = [];
+        }
+    }
+    
+
+    $scope.addPlayer = function (person) {
+        if ($scope.playerList[$scope.searchProv].includes(person)) {
+
+        }
+        else {
+            $scope.playerList[$scope.searchProv].push(person);
         }
     }
 
-    $scope.test = [];
+    var xmatchId = [];
 
-    $scope.addPlayer = function (person) {
-        $scope.playerList[$scope.searchProv].push(person);
-        console.log($scope.playerList);
+    $scope.goMatches = function () {
+
+        $scope.sendList = [];
+        var i;
+        for (i = 0; i < $scope.selectCountry.length; i++) {
+            var tempJson = { "country_id": $scope.selectCountId[i], "players": $scope.playerList[$scope.selectCountry[i]] };
+            $scope.sendList.push(tempJson);
+
+        }
+        
+        $http.post(Host + "/api/tournament/addcountry", {
+            tournament_id: tourID,
+            countries: $scope.sendList
+        }).
+            then((promise) => {
+                if (promise.data.success === "true") {
+                    $scope.teams = false;
+                    $scope.matches = true;
+                    xmatchId = promise.data.tournamentxcoutnry_id
+                }
+            });
+
     }
 
-    $scope.testy = function (tempy) {
-        $scope.test = $scope.playerList[tempy];
-    }
-
-    $scope.matchList = [];
-
-    //Stages configuration
-    $scope.addMatch = function () {
-        tempvs = $scope.team1 + " vs " + $scope.team2;
-        $scope.matchList.push(tempvs);
-    }
 
     //Matches configuration
-    $scope.goStages = function () {
-        $scope.matches = false;
-        $scope.stages = true;
 
-    }
+
 
     var matchNumb = 1;
     $scope.showMatch = [];
@@ -265,7 +306,97 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         }
     }
 
+    $scope.availableCountry = $scope.selectCountry;
+    $scope.winnerList = []
+
     $scope.addFight = function () {
+
+        if ($scope.selectCountry.includes($scope.team1)) {
+            var it1 = 0;
+            var it2 = 0;
+            var check1 = "";
+            var check2 = "";
+            while (check1 != $scope.team1) {
+                check1 = $scope.selectCountry[it1];
+                it1 += 1;
+            }
+            while (check2 != $scope.team2) {
+                check2 = $scope.selectCountry[it2];
+                it2 += 1;
+            }
+            
+
+            $http.post(Host + "/api/tournament/addmatch", {
+                "tournament_id": tourID,
+                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day),
+                "match_location": $scope.location,
+                "stage_id": "1",
+                "txc_team1": $scope.selectCountId[it1],
+                "txc_team2": $scope.selectCountId[it2],
+                "sxm_winner1" : "",
+                "sxm_winner2" : "",
+                "match_number": matchNumb
+
+            }).
+                then((promise) => {
+                    if (promise.data.success === "true") {
+                        var xmatchId = promise.data.stagexmatch_id;
+                        var xmatchName = promise.data.stagexmatxh_name;
+                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
+                        $scope.availableCountry.push(xmatchName);
+                        $scope.showMatch.push("Match" + matchNumb.toString());
+                        $scope.showMatch.push($scope.team1 + $scope.team2);
+                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
+                        $scope.showMatch.push($scope.location);
+                        matchNumb += 1;
+                    }
+                });
+
+            
+
+
+        }
+        else {
+            var it1 = 0;
+            var it2 = 0;
+            var check1 = "";
+            var check2 = "";
+            while (check1 != $scope.team1) {
+                check1 = $scope.availableCountry[it1];
+                it1 += 1;
+            }
+            while (check2 != $scope.team2) {
+                check2 = $scope.availableCountry[it2];
+                it2 += 1;
+            }
+
+            $http.post(Host + "/api/tournament/addmatch", {
+                "tournament_id": tourID,
+                "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day),
+                "match_location": $scope.location,
+                "stage_id": "1",
+                "txc_team1": "",
+                "txc_team2": "",
+                "sxm_winner1": $scope.availableCountry[it1],
+                "sxm_winner2": $scope.availableCountry[it2],
+                "match_number": matchNumb
+
+            }).
+                then((promise) => {
+                    if (promise.data.success === "true") {
+                        var xmatchId = promise.data.stagexmatch_id;
+                        var xmatchName = promise.data.stagexmatxh_name;
+                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
+                        $scope.availableCountry.push(xmatchName);
+                        $scope.showMatch.push("Match" + matchNumb.toString());
+                        $scope.showMatch.push($scope.team1 + $scope.team2);
+                        $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
+                        $scope.showMatch.push($scope.location);
+                        matchNumb += 1;
+                    }
+                });
+        }
+
         $scope.showMatch.push("Match" + matchNumb.toString());
         $scope.showMatch.push($scope.doneMatch);
         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day));
@@ -273,8 +404,23 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         matchNumb += 1;
     }
 
-    login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
-        
-    });
+    
+
+    $scope.goStages = function () {
+        $scope.matches = false;
+        $scope.stages = true;
+
+    }
+
+
+    //Stages configuration
+    $scope.addMatch = function () {
+        tempvs = $scope.team1 + " vs " + $scope.team2;
+        $scope.matchList.push(tempvs);
+    }
+
+});
+
+login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
 
 });

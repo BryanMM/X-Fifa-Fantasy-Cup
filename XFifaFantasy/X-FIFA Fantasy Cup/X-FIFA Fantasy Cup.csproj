@@ -109,6 +109,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Fanatic.cs" />
     <Compile Include="Models\LoginDetails.cs" />
+    <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerxCountry.cs" />
     <Compile Include="Models\Powerup.cs" />

@@ -213,12 +213,13 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.country = $scope.selectPlayer;*/
     $scope.selectCountry = [];
     $scope.selectCountId = [];
-    var temp = { "Germany" : ["1", "2"], "USA" : ["1", "2"], "USA" : ["1", "2"], "China": ["1", "2"] };
+    var temp = { "Germany": ["1", "2"], "USA": ["1", "2"], "USA": ["1", "2"], "China": ["1", "2"] };
+    $scope.avPlayers = {};
     $scope.showList = [];
     $scope.playerList = {};
 
     $scope.displayList = function () {
-        $scope.showList = temp[$scope.searchProv];
+        $scope.showList = avPlayers[$scope.searchProv];
     }
 
     $scope.addCountry = function () {
@@ -229,6 +230,16 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             $scope.selectCountry.push($scope.prov.Name);
             $scope.selectCountId.push($scope.prov.Id);
             $scope.playerList[$scope.prov.Name] = [];
+
+            $http.post(Host + "/api/country/players", {
+                "country_id": $scope.prov.Id,
+                "player_active": 1
+
+            }).
+                then((promise) => {
+                    $scope.avPlayers[$scope.prov.Name] = promise.data.player;
+                    
+                });
         }
     }
     

@@ -93,6 +93,7 @@
     <Content Include="WebPages\User\LoginTemplate.html" />
     <Content Include="WebPages\User\RegisterUser.html" />
     <Content Include="WebPages\User\UserCalendar.html" />
+    <Content Include="WebPages\User\UserProfile.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />

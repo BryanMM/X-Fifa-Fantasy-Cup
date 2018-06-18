@@ -29,6 +29,10 @@ login.config(function ($routeProvider) {
         .when("/adminProfile", {
             templateUrl: "Admin/AdminProfile.html",
             controller: "adminProfile"
+        })
+        .when("/userProfile", {
+            templateUrl: "User/UserProfile.html",
+            controller: "userProfile"
         });
 });
 
@@ -306,15 +310,19 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.daylist1 = [];
     $scope.daylist2 = [];
     $scope.daylist3 = [];
-    for (i = 1; i <= 28; i++) {
+
+    $scope.daylist1.push("01", "02", "03", "04", "05", "06", "07", "08", "09");
+
+    $scope.daylist2.push("01", "02", "03", "04", "05", "06", "07", "08", "09");
+
+    $scope.daylist3.push("01", "02", "03", "04", "05", "06", "07", "08", "09");
+    for (i = 10; i <= 28; i++) {
         $scope.daylist1.push(i);
     }
-    $scope.daylist2 = [];
-    for (i = 1; i <= 30; i++) {
+    for (i = 10; i <= 30; i++) {
         $scope.daylist2.push(i);
     }
-    $scope.daylist3 = [];
-    for (i = 1; i <= 31; i++) {
+    for (i = 10; i <= 31; i++) {
         $scope.daylist3.push(i);
     }
     $scope.chooseDaylist = function () {
@@ -443,5 +451,10 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 });
 
 login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
+
+});
+
+
+login.controller("userProfile", function ($scope, $rootScope, $location, $http) {
 
 });

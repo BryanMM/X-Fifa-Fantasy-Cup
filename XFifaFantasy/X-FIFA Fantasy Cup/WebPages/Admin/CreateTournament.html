@@ -22,7 +22,7 @@
                                 </div>
                                 <select class="form-control" ng-model="spon">
                                     <option value="" disabled selected>Add Sponsor</option>
-                                    <option ng-repeat="sponi in sponsor" ng-value="sponi">{{sponi.Name}}</option>
+                                    <option ng-repeat="sponi in sponsor" ng-value="sponi">{{sponi.sponsor_name}}</option>
                                 </select>
                                 
 
@@ -64,7 +64,7 @@
 
                                 <div class="vertical-menu-player">
                                     <ul class="list-group">
-                                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it.player_name}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
                                     </ul>
                                 </div>
 

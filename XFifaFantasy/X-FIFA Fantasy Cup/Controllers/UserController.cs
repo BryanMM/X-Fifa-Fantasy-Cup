@@ -45,7 +45,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             while (dr.Read())
             {
                 constructor.success = "";
-                constructor.detail_type = (string) dr["user_login"].ToString();
+                constructor.detail_type = (string) dr["user_type"].ToString();
                 constructor.detail_xinfo = (string)dr["user_login"].ToString();
                 constructor.detail_status = (string)dr["user_active"].ToString();
             }
@@ -181,8 +181,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
         }
 
-        [HttpGet]
-        public JsonResult<Fanatic> GetUser(DbConnection dbConnection)
+        [HttpPost]
+        public JsonResult<Fanatic> getinfo(DbConnection dbConnection)
         {
             Fanatic result = new Fanatic();
             SqlConnection myConnection = new SqlConnection();

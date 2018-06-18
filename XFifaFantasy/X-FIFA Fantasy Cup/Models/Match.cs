@@ -7,6 +7,8 @@ namespace X_FIFA_Fantasy_Cup.Models
 {
     public class Match
     {
+        public string match_name { get; set; }
+        public int match_id { get; set; }
         public string match_date { get; set; }
         public string match_location { get; set; }
         public int stage_id { get; set; }

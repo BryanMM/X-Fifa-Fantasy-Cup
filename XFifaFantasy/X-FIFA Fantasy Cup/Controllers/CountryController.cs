@@ -18,19 +18,12 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         public JsonResult<List<Country>> Countries()
         {
             List <Country> results = new List<Country>();
-            Country tmp = null;
-
-            System.Diagnostics.Debug.WriteLine("llegó al post");
-            System.Diagnostics.Debug.WriteLine("entrando al get");
-             
+            Country tmp = null;            
             string action = "SELECT * FROM COUNTRY";
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-  
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand(action, myConnection);
-
-
             sqlCmd.CommandType = CommandType.Text;
              var reader = sqlCmd.ExecuteReader();
             while (reader.Read())
@@ -39,12 +32,33 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 tmp.Id = (int)reader["country_id"];
                 tmp.Name = (string)reader["country_name"];
                 results.Add(tmp);
+            }    
+            myConnection.Close();
+            return Json(results);            
+        }
+        [HttpPost]
+        [ActionName("players")]
+        public JsonResult<List<Player>> players(Player player)
+        {
+            List<Player> results = new List<Player>();
+            Player tmp = null;
+            string action = "select * from playerxinfo full outer join player on playerxinfo.player_id = player.player_id where playerxinfo.country_id"+" = "+ player.country_id+" and player.player_active = "+player.player_active;
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
+            SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+            myConnection.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            var reader = sqlCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                tmp = new Player();
+                tmp.player_id = (string)reader["player_id"];
+                tmp.player_name = (string)reader["player_name"]+" "+(string)reader["player_last_name"];
+                results.Add(tmp);
             }
-    
             myConnection.Close();
             return Json(results);
-            
         }
     }
     }

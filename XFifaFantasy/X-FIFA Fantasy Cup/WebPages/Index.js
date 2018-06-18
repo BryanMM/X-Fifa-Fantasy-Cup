@@ -511,6 +511,8 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
     }).
         then((promise) => {
             let mydata = promise.data;
+            console.log("test");
+            console.log(mydata);     
             $scope.fname = mydata.fanatic_name;
             $scope.lname = mydata.fanatic_last_name;
             $scope.ucountry = mydata.fanatic_country;

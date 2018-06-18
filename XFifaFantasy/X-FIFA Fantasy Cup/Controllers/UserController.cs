@@ -187,9 +187,9 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             Fanatic result = new Fanatic();
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            if (dbConnection.detail_type=="1")
+            if (dbConnection.detail_type == "2")
             {
-                string action = "SELECT * FROM USERXINFO FULL OUTER JOIN FANATIC ON USERXINFO.FANATIC_LOGIN = FANATIC.FANATIC_LOGIN";
+                string action = "select * from userxinfo full outer join fanatic on userxinfo.fanatic_login = fanatic.fanatic_login where userxinfo_id ="+ Int32.Parse(dbConnection.detail_xinfo);
 
                 myConnection.Open();
                 SqlCommand sqlCmd = new SqlCommand(action, myConnection);
@@ -199,10 +199,11 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 var reader = sqlCmd.ExecuteReader();
                 while (reader.Read())
                 {
+                    DateTime datetmp = (DateTime)reader["fanatic_date_create"];   
                     result.fanatic_name = (string)reader["fanatic_name"];
                     result.fanatic_last_name = (string)reader["fanatic_last_name"];
-                    result.fanatic_birth = (string)reader["fanatic_birth"];
-                    result.fanatic_date_create = (string)reader["fanatic_date_create"];
+                    //result.fanatic_birth = reader["fanatic_birth"].ToString();
+                    result.fanatic_date_create = datetmp.ToString("dd-mm-yyyy hh:mm");
                     result.fanatic_description = (string)reader["fanatic_description"];
                     result.fanatic_email = (string)reader["fanatic_email"];
                     result.fanatic_id = (string)reader["fanatic_login"];                   
@@ -212,8 +213,25 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
             else
             {
-                return Json(result);
+                string action = "select * from adminxinfo full outer join admin on adminxinfo.admin_username = admin.admin_username where adminxinfo_id =" + Int16.Parse(dbConnection.detail_xinfo);
+                myConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand(action, myConnection);
 
+
+                sqlCmd.CommandType = CommandType.Text;
+                var reader = sqlCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    DateTime datetmp = (DateTime)reader["fanatic_date_create"];
+                    result.fanatic_name = (string)reader["admin_name"];
+                    result.fanatic_last_name = (string)reader["admin_last_name"];
+                    //result.fanatic_birth = reader["fanatic_birth"].ToString();
+                    result.fanatic_date_create = datetmp.ToString("dd-mm-yyyy hh:mm");                    
+                    result.fanatic_email = (string)reader["admin_email"];
+                    result.fanatic_id = (string)reader["admin_username"];
+                }
+                myConnection.Close();
+                return Json(result);
             }            
         }
 

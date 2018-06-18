@@ -2,6 +2,7 @@
 var UserInfo = "";
 var Activity = "";
 var UserType = "";
+var TourSub = "";
 var Host = "http://localhost:65049";
 
 var login = angular.module("loginApp", ["ngRoute"]);
@@ -34,10 +35,14 @@ login.config(function ($routeProvider) {
         .when("/userProfile", {
             templateUrl: "User/UserProfile.html",
             controller: "userProfile"
+        })
+        .when("/subscribe", {
+            templateUrl: "User/SubTournament.html",
+            controller: "subTournament"
         });
 });
 
-//Root controller
+//Root controller///////////////////////////////////////////////////
 login.controller("rootCont", function ($scope, $location) {
     $scope.goLogout = function () {
         UserName = "";
@@ -48,7 +53,7 @@ login.controller("rootCont", function ($scope, $location) {
     }
 });
 
-//Login verification controller
+//Login verification controller///////////////////////////////////////
 login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = false;
     $rootScope.showItemAdmin = false;
@@ -83,6 +88,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
 });
 
+//Registration controller//////////////////////////////////
 login.controller("register", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = false;
     $rootScope.showItemAdmin = false;
@@ -97,7 +103,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
         });
 
     $scope.yearlist = [];
-    for (i = 2017; i >= 1900; i--) {
+    for (i = 2018; i >= 1900; i--) {
         $scope.yearlist.push(i);
     }
     $scope.monthlist = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -163,10 +169,25 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
     }
 });
 
+//UserCalendar controller////////////////////////////////
 login.controller("userCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = true;
+    //CAMBIAR URL
+    $http.get(Host + "/api/Country/countries").
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.tournament = mydata;
+
+        });
+
+    $scope.subTournament = function () {
+        //AGREGAR TOUR SUB
+        $location.path("/subscribe");
+    }
+
 });
 
+//AdminCalendar Controller///////////////////////////////
 login.controller("adminCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = true;
     $scope.goTour = function () {
@@ -174,6 +195,7 @@ login.controller("adminCalendar", function ($scope, $rootScope, $location, $http
     }
 });
 
+//Tournament creation controller////////////////////////////
 login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.name = true;
     $scope.teams = false;
@@ -181,7 +203,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.stages = false;
     var tourID = "";
 
-    //Names Configuration
+    //Names Configuration/////////////////////////////////////////////
 
     $http.get(Host + "/api/tournament/sponsor").
         then((promise) => {
@@ -207,7 +229,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
     
 
-    //Teams configuration
+    //Teams configuration/////////////////////////////////////////////
     
 
     $scope.country = [];
@@ -301,7 +323,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
 
 
-    //Matches configuration
+    //Matches configuration//////////////////////////////////////////////
 
 
 
@@ -448,7 +470,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
 
 
-    //Stages configuration
+    //Stages configuration//////////////////////////////////////////////
     $scope.addMatch = function () {
         tempvs = $scope.team1 + " vs " + $scope.team2;
         $scope.matchList.push(tempvs);
@@ -456,6 +478,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
 });
 
+//Admin profile controller//////////////////////////////////////////
 login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
     $http.post(Host + "/api/user/getinfo", {
         "detail_xinfo": UserInfo,
@@ -471,7 +494,7 @@ login.controller("adminProfile", function ($scope, $rootScope, $location, $http)
         });
 });
 
-
+//User profile controller////////////////////////////////////////////
 login.controller("userProfile", function ($scope, $rootScope, $location, $http) {
     $http.post(Host + "/api/user/getinfo", {
         "detail_xinfo": UserInfo,
@@ -491,4 +514,16 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
             $scope.regdate = mydata.registrationdate;
             $scope.descript = mydata.description;
         });
+});
+
+//Tournament Subscription controller//////////////////////////////////////
+login.controller("subTournament", function ($scope, $rootScope, $location, $http) {
+    $scope.playerSearch;
+
+    $scope.selectCountry;
+    $scope.showList;
+
+    $scope.displayList = function () {
+
+    }
 });

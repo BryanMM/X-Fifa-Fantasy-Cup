@@ -1,6 +1,7 @@
 ﻿var UserName = "";
 var UserInfo = "";
-var Activity = 0;
+var Activity = "";
+var UserType = "";
 var Host = "http://localhost:65049";
 
 var login = angular.module("loginApp", ["ngRoute"]);
@@ -39,8 +40,10 @@ login.config(function ($routeProvider) {
 //Root controller
 login.controller("rootCont", function ($scope, $location) {
     $scope.goLogout = function () {
-        UserToken = 0;
         UserName = "";
+        UserType = "";
+        UserInfo = "";
+        Activity = "";
         $location.path("/");
     }
 });
@@ -54,7 +57,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       // $location.path("/adminCalendar");
+       $location.path("/userCalendar");
         
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -62,6 +65,9 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     UserName = $scope.usr;
                     if (promise.data.detail_type === "1") { 
                         $location.path("/adminCalendar");
+                            UserInfo = promise.data.detail_xinfo;
+                            UserType = promise.data.detail_type;
+                            Activity = promise.data.detail_status;
                     }
                     else {
                         $location.path("/userCalendar");
@@ -451,10 +457,38 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 });
 
 login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
+    $http.post(Host + "/api/user/getinfo", {
+        "detail_xinfo": UserInfo,
+        "detail_type": UserType,
 
+    }).
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.fname = mydata.name;
+            $scope.lname = mydata.lastname;
+            $scope.uemail = mydata.email;
+            $scope.usernameE = mydata.username;
+        });
 });
 
 
 login.controller("userProfile", function ($scope, $rootScope, $location, $http) {
+    $http.post(Host + "/api/user/getinfo", {
+        "detail_xinfo": UserInfo,
+        "detail_type": UserType,
 
+    }).
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.fname = mydata.name;
+            $scope.lname = mydata.lastname;
+            $scope.ucountry = mydata.country;
+            $scope.uemail = mydata.email;
+            $scope.uphone = mydata.phone;
+            $scope.bday = mydata.birthday;
+            $scope.usernameu = mydata.username;
+            $scope.userID = mydata.ID;
+            $scope.regdate = mydata.registrationdate;
+            $scope.descript = mydata.description;
+        });
 });

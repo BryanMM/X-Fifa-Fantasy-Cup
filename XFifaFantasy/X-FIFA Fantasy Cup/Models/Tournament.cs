@@ -10,5 +10,7 @@ namespace X_FIFA_Fantasy_Cup.Models
         public int tournament_id { get; set; }
         public string tournament_name { get; set; }
         public int sponsor_id { get; set; }
+
+        public List<tourmamentxcountry> countries = new List<tourmamentxcountry>();
     }
 }

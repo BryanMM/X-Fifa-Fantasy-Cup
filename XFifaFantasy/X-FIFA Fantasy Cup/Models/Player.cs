@@ -17,5 +17,7 @@ namespace X_FIFA_Fantasy_Cup.Models
         public int player_price { get; set; }
         public bool player_active { get; set; }
         public string player_photo { get; set; }
+
+ 
     }
 }

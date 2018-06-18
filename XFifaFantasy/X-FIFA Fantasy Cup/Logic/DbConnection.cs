@@ -12,5 +12,6 @@ namespace X_FIFA_Fantasy_Cup.Logic
         public string detail_type { get; set; }
         public string detail_xinfo { get; set; }
         public string detail_status { get; set; }
+        public List<int> tournamentxcountry = new List<int>();
     }
 }

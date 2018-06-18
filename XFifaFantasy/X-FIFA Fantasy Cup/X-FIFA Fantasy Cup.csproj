@@ -110,9 +110,11 @@
     <Compile Include="Models\Fanatic.cs" />
     <Compile Include="Models\LoginDetails.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\PlayerxCountry.cs" />
     <Compile Include="Models\Powerup.cs" />
     <Compile Include="Models\Sponsor.cs" />
     <Compile Include="Models\Stats.cs" />
+    <Compile Include="Models\tourmamentxcountry.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

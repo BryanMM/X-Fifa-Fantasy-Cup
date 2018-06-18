@@ -5,7 +5,7 @@ using System.Web;
 
 namespace X_FIFA_Fantasy_Cup.Models
 {
-    public class Fanatic
+    public class Player
     {
         public int player_id { get; set; }
         public string player_name { get; set; }

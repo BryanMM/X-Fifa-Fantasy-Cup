@@ -184,7 +184,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         
         $http.post(Host + "/api/tournament/create", {
             tournament_name: $scope.tourName,
-            sponsor_id: $scope.spon.Id
+            sponsor_id: 1
         }).
             then((promise) => {
                 if (promise.data.success === "true") {
@@ -208,9 +208,9 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             $scope.country = mydata;
 
         });
-    
+    /*
     $scope.selectPlayer = [{ "Id": "1", "Name": "Germany" }, { "Id": "2", "Name": "China" }, { "Id": "3", "Name": "USA" }];
-    $scope.country = $scope.selectPlayer;
+    $scope.country = $scope.selectPlayer;*/
     $scope.selectCountry = [];
     $scope.selectCountId = [];
     var temp = { "Germany" : ["1", "2"], "USA" : ["1", "2"], "USA" : ["1", "2"], "China": ["1", "2"] };

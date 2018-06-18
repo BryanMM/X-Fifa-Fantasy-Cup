@@ -165,18 +165,14 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             if (result > 0)
             {
                 constructor.success = "true";
-
                 constructor.detail_type = result.ToString();
-
                 return Json(constructor);
             }
-
             else
             {
                 constructor.success = "false";
                 constructor.detail_type = "Error while inserting the tournament";
                 return Json(constructor);
-
             }
 
         }

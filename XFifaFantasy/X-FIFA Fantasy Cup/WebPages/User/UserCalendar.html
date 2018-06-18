@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-3">
 
-            <!--
+            
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default" ng-repeat="cont in tournament" ng-value="cont">
                     <div class="panel-heading">
@@ -14,12 +14,12 @@
                     </div>
                     <div id="{{cont.tournament_name}}" class="panel-collapse collapse in">
                         <div>
-                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.match" ng-value="sel">{{sel.match_name}}</button>
+                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.matches" ng-value="sel">{{sel.match_name}}</button>
                         </div>
                     </div>
                 </div>
             </div>
-            -->
+            
             <!------------------------------------------------------------------>
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default">

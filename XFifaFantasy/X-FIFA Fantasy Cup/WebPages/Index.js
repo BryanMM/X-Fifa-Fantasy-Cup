@@ -62,7 +62,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       $location.path("/userCalendar");
+       //$location.path("/userCalendar");
         
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -70,12 +70,15 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
                     UserName = $scope.usr;
                     if (promise.data.detail_type === "1") { 
                         $location.path("/adminCalendar");
-                            UserInfo = promise.data.detail_xinfo;
-                            UserType = promise.data.detail_type;
-                            Activity = promise.data.detail_status;
+                        UserInfo = promise.data.detail_xinfo;
+                        UserType = promise.data.detail_type;
+                        Activity = promise.data.detail_status;
                     }
                     else {
                         $location.path("/userCalendar");
+                        UserInfo = promise.data.detail_xinfo;
+                        UserType = promise.data.detail_type;
+                        Activity = promise.data.detail_status;
                     }
                 }
                 else {
@@ -172,9 +175,12 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
 //UserCalendar controller////////////////////////////////
 login.controller("userCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = true;
-    //CAMBIAR URL
-    $http.get(Host + "/api/Country/countries").
+
+    $scope.tournament;
+    console.log("HOLA");
+    $http.get(Host + "/api/tournament/gettournaments").
         then((promise) => {
+            console.log("ADIOS");
             let mydata = promise.data;
             $scope.tournament = mydata;
 
@@ -482,7 +488,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 login.controller("adminProfile", function ($scope, $rootScope, $location, $http) {
     $http.post(Host + "/api/user/getinfo", {
         "detail_xinfo": UserInfo,
-        "detail_type": UserType,
+        "detail_type": UserType
 
     }).
         then((promise) => {
@@ -496,9 +502,12 @@ login.controller("adminProfile", function ($scope, $rootScope, $location, $http)
 
 //User profile controller////////////////////////////////////////////
 login.controller("userProfile", function ($scope, $rootScope, $location, $http) {
+    console.log(UserInfo);
+    console.log(UserType);
+
     $http.post(Host + "/api/user/getinfo", {
         "detail_xinfo": UserInfo,
-        "detail_type": UserType,
+        "detail_type": UserType
 
     }).
         then((promise) => {

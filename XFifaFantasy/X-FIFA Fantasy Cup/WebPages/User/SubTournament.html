@@ -35,10 +35,33 @@
                 <h3>Statistics: </h3>
             </div>
             <div class="col-md-3">
-
+                <h3>Selected team:</h3>
+                <h4>Fullbacks:</h4>
+                <div class="vertical-menu-player">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it.player_name}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                    </ul>
+                </div>
+                <h4>Midfielders:</h4>
+                <div class="vertical-menu-player">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it.player_name}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                    </ul>
+                </div>
             </div>
             <div class="col-md-3">
-
+                <h4>Goalkeeper:</h4>
+                <div class="vertical-menu-player">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it.player_name}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                    </ul>
+                </div>
+                <h4>Forwards:</h4>
+                <div class="vertical-menu-player">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="it in showList" ng-value="it">{{it.player_name}}<span class="glyphicon glyphicon-plus" ng-click="addPlayer(it)" style="cursor:pointer; color: red; float: right;"></span></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

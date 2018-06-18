@@ -9,7 +9,7 @@
 	fanatic_last_name	varchar(30) NOT NULL,
 	fanatic_email		varchar(255) NOT NULL,
 	fanatic_phone		int NOT NULL,
-	fanatic_birth		DATE NOT NULL,
+	fanatic_birth		varchar(255) NOT NULL,
 	fanatic_date_create	DATETIME NOT NULL,
 	fanatic_password	varbinary(max) NOT NULL,
 	fanatic_active		BIT NOT NULL DEFAULT (1),
@@ -31,7 +31,7 @@ CREATE TABLE player(
 	player_id varchar(8) PRIMARY KEY NOT NULL,
 	player_name VARCHAR(30) NOT NULL,
 	player_last_name VARCHAR(30) NOT NULL,
-	player_birth DATE NOT NULL,
+	player_birth varchar(255) NOT NULL,
 	player_height INT NOT NULL,
 	player_weight INT NOT NULL,
 	player_team VARCHAR(30) NOT NULL,
@@ -65,8 +65,8 @@ CREATE TABLE stats(
 
 CREATE TABLE live(
 	live_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	live_start DATETIME NOT NULL,
-	live_end DATETIME
+	live_start varchar(255) NOT NULL,
+	live_end varchar(255)
 );
 
 CREATE TABLE admin(
@@ -145,7 +145,7 @@ create table tournamentxcountry(
 
 CREATE TABLE match(
 	match_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	match_date DATETIME NOT NULL,
+	match_date varchar(255) NOT NULL,
 	match_location varchar(255) NOT NULL,
 	match_enable BIT NOT NULL DEFAULT(1),
 	match_score_1 int default(0),
@@ -229,11 +229,7 @@ insert into user_type values (1,'Administrator'),(2,'Fanatic');
 insert into country values(1,'China'),(2,'Korea'),(3,'Vietnam');
 create master key encryption by password = 'juan1234'
 declare @result int;
-declare @date DATE;
-declare @datet DATETIME;
-select @date = CONVERT(date,GETDATE());
-exec @result =  dbo.insertfanatic @f_login='pedro',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth=@date ,@f_password='juantaco',@f_country=1;
-declare @result int;
+exec @result =  dbo.insertfanatic @f_login='pedro',@f_name='juan',@f_last_name='tacos',@f_email='tacos@tacos.com',@f_phone=8288, @f_birth='1-1-1995' ,@f_password='juantaco',@f_country=1;
 exec @result = dbo.insertadmin @a_username='admin',@a_name='pedro',@a_last_name='perez',@a_email='security@tacos.com',@a_password='admin';
 print @result;
 
@@ -243,21 +239,12 @@ insert into sponsor(sponsor_name,sponsor_status,sponsor_photo) values('Coca Cola
 insert into tournament(tournament_name,sponsor_id) values('Rusia 2018',1);
 insert into tournamentxcountry(tournament_id,country_id) values(1,1),(1,2),(1,3);
 
-set @datet = GETDATE()
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=2,@tournament_id=1;
+exec insertadminmatch @match_date='1-1-2018 9:00',@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=2,@tournament_id=1;
+exec insertadminmatch @match_date='2-1-2018 9:00',@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
+exec insertadminmatch @match_date='3-1-2018 9:00',@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
+exec insertadminmatch @match_date='4-1-2018 9:00',@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1;
 
-set @datet = GETDATE()
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=1,@txc_team_1=1,@txc_team_2=3,@tournament_id=
-set @datet = GETDATE()
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1
-
-
-set @datet = GETDATE()
-exec insertadminmatch @match_date=@datet,@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1
-
-declare @date DATETIME;
-select @date = CONVERT(date,GETDATE());
-insert into player values('1234','Juan' ,'Núñez',@date,180,85,'Pollitos FC',10,1,'C:/program files'),('3456','Carlos' ,'Núñez',@date,180,85,'Pollitos FC',10,1,'C:/program files');
+insert into player values('1234','Juan' ,'Núñez','1-1-1980',180,85,'Pollitos FC',10,1,'C:/program files'),('3456','Carlos' ,'Núñez','1-1-1975',180,85,'Pollitos FC',10,1,'C:/program files');
 insert into playerxposition values(1,'Goalkeeper'),(2,'Fullback'),(3,'Midfielder'),(4,'Forward');
 insert into playerxinfo(country_id,playerxposition_id,player_id) values(1,2,'1234'),(1,3,'3456');
 insert into eventmatch(action_name,action_value) values('Goal goalkeeper',8),

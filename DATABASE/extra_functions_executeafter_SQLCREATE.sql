@@ -6,7 +6,7 @@ create procedure insertfanatic
 	@f_last_name	VARCHAR(30),
 	@f_email		VARCHAR(255),
 	@f_phone		INT,
-	@f_birth		DATE,
+	@f_birth		varchar(255),
 	@f_password		VARCHAR(8),
 	@f_active		BIT = 1,
 	@f_photo		varchar(max) = NULL,
@@ -70,7 +70,7 @@ create procedure insertplayer
 	@p_passport int,
 	@p_name varchar(30),
 	@p_lastname varchar(30),
-	@p_birthdate date,
+	@p_birthdate varchar(255),
 	@p_height int,
 	@p_weight int,
 	@p_team	 varchar(30),
@@ -221,7 +221,7 @@ end;
 -- It creates a new live, it sets the moment it starts and returns
 -- the id to be used in later actions.
 create procedure createlive
-	@start DATETIME,
+	@start varchar(255),
 	@match_id int
 as begin
 	declare @return int;
@@ -275,7 +275,7 @@ as begin
 end
 
 create procedure insertadminmatch
-	@match_date DATETIME,
+	@match_date varchar(255),
 	@match_location varchar(255),
 	@stage_id int,
 	@tournament_id int,

@@ -644,8 +644,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.goPrediction = function () {
-        //////////////////////////////// EDITAR URL
-        $http.post(Host + "/api/country/players", {
+        $http.post(Host + "/api/user/sendfantasy", {
             "userxinfo_id": UserInfo,
             "tournament_id": TourSub,
             "players": $scope.listPlayer

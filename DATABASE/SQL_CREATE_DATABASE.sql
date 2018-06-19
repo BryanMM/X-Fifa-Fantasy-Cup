@@ -32,10 +32,10 @@ CREATE TABLE player(
 	player_name VARCHAR(30) NOT NULL,
 	player_last_name VARCHAR(30) NOT NULL,
 	player_birth varchar(255) NOT NULL,
-	player_height INT NOT NULL,
-	player_weight INT NOT NULL,
+	player_height float NOT NULL,
+	player_weight float NOT NULL,
 	player_team VARCHAR(30) NOT NULL,
-	player_price INT NOT NULL,
+	player_price float NOT NULL,
 	player_active BIT NOT NULL,
 	player_photo varchar(max) NOT NULL
 );
@@ -111,7 +111,8 @@ CREATE TABLE playerxinfo(
 create table tournament(
 	tournament_id int identity(1,1) primary key not null,
 	tournament_name varchar(255) not null,
-	sponsor_id int foreign key references sponsor(sponsor_id)
+	sponsor_id int foreign key references sponsor(sponsor_id),
+	tournament_available int default(0)
 );
 
 create table playerxstats(

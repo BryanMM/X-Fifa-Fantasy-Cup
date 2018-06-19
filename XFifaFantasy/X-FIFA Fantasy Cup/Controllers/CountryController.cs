@@ -42,7 +42,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         {
             List<Player> results = new List<Player>();
             Player tmp = null;
-            string action = "select * from playerxinfo full outer join player on playerxinfo.player_id = player.player_id where playerxinfo.country_id"+" = "+ player.country_id+" and player.player_active = "+player.player_active;
+            string action = "select py.player_id,py.player_name,py.player_last_name,py.player_price,py.player_grade,pxi.playerxinfo_id from player as py left outer join playerxinfo as pxi on(py.player_id = pxi.player_id) left outer join playerxposition as pxp on(pxi.playerxposition_id = pxp.playerxposition_id) where pxi.country_id = +" + player.country_id+" and player.player_active = "+player.player_active;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -55,6 +55,10 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 tmp = new Player();
                 tmp.player_id = (string)reader["player_id"];
                 tmp.player_name = (string)reader["player_name"]+" "+(string)reader["player_last_name"];
+                tmp.player_price = (int)reader["player_price"];
+                tmp.playerxinfo_id = (int)reader["playerxinfo_id"];
+                tmp.player_grade = (int)reader["player_grade"];
+
                 results.Add(tmp);
             }
             myConnection.Close();

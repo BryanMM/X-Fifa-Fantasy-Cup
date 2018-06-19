@@ -109,6 +109,7 @@
     <Compile Include="Logic\DbConnection.cs" />
     <Compile Include="Logic\TwitterApi.cs" />
     <Compile Include="Models\Admin.cs" />
+    <Compile Include="Models\AdminMatch.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Fanatic.cs" />
     <Compile Include="Models\LoginDetails.cs" />

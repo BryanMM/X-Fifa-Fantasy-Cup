@@ -69,7 +69,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             return Json(results);
         }
         [HttpGet]
-        public JsonResult<List<Sponsor>> Sponsor()
+        public JsonResult<List<Sponsor>> sponsor()
         {
             List<Sponsor> results = new List<Sponsor>();
             Sponsor tmp = null;
@@ -218,23 +218,23 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
         [HttpPost]
         [ActionName("AddMatch")]
-        public JsonResult<DbConnection> AddMatch(Match match)
+        public JsonResult<Match> AddMatch(AdminMatch match)
         {
-            DbConnection constructor = new DbConnection();
+            Match constructor = new Match();
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertadminmatch", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            System.Diagnostics.Debug.WriteLine(match.stage_id +" "+ match.sxm_winner1 +" "+ match.sxm_winner2+" "  + match.tournament_id+" " + match.txc_team_1+" " + match.txc_team_2+" " + match.match_date + match.match_location);
+            System.Diagnostics.Debug.WriteLine(match.stage_id +" "+ match.sxm_winner1 +" "+ match.sxm_winner2+" "  + match.tournament_id+" " + match.txc_team1+" " + match.txc_team2+" " + match.match_date + match.match_location);
             sqlCmd.Parameters.Add(new SqlParameter("@match_date", match.match_date));
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team_1));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team_2));
-            if (match.sxm_winner1.ToString() != "")
+            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team1));
+            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team2));
+            if (match.sxm_winner1 != "")
             {
                 System.Diagnostics.Debug.WriteLine("entrando al coso");
                 sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner1", match.sxm_winner1));
@@ -245,15 +245,15 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 int result = (int)returnparam.Value;
                 if (result > 0)
                 {
-                    constructor.success = "true";
-                    constructor.detail_type = result.ToString();
+                    constructor.Success = "true";
+                    constructor.stagexmatch_id = result;
+                    constructor.stagexmatch_name = "winner of match "+match.match_number;
                     return Json(constructor);
                 }
                 else
                 {
                     
-                    constructor.success = "false";
-                    constructor.detail_type = "Error while inserting the tournament";
+                    constructor.Success = "false";
                     return Json(constructor);
                 }
             }
@@ -266,23 +266,23 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 int result = (int)returnparam.Value;
                 if (result > 0)
                 {
-                    constructor.success = "true";
-                    constructor.detail_type = result.ToString();
+                    constructor.Success = "true";
+                    constructor.stagexmatch_id= result;
+                    constructor.stagexmatch_name = "winner of match " + match.match_number;
                     return Json(constructor);
                 }
                 else
                 {
-                    constructor.success = "false";
-                    constructor.detail_type = "Error while inserting the tournament";
+                    constructor.Success = "false";
                     return Json(constructor);
                 }
             }
 
         }
-        /*
+        
         [HttpPost]
         [ActionName("GetStage")]
-        public JsonResult<Match> getstage(Match match)
+        public JsonResult<AdminMatch> getstage(AdminMatch match)
         {
             Match constructor = new Match();
             SqlConnection myConnection = new SqlConnection();
@@ -305,8 +305,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 // System.Diagnostics.Debug.WriteLine();
                while (dr.Read())
                 {
-                    constructor.match_id =(int) dr[""] ;
-                    constructor.detail_type = (string)dr["user_type"].ToString();
+                    constructor.match_id =(int) dr["match_id"] ;
+                    constructor. = (string)dr["user_type"].ToString();
                     constructor.detail_xinfo = (string)dr["user_login"].ToString();
                     constructor.detail_status = (string)dr["user_active"].ToString();
                 }
@@ -315,7 +315,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             {
 
             }
-            */
+            
 
         }
 

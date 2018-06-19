@@ -3,23 +3,22 @@
         <div class="col-md-3">
 
             <div class="panel-group" id="accordion">
-                <div class="panel panel-default" ng-repeat="cont in tournament" ng-value="cont">
+                <div class="panel panel-default" ng-repeat="contain in adminTournament" ng-value="contain">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" data-target="#{{cont.tournament_name}}">
-                                {{cont.tournament_name}}
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#{{contain.tournament_name}}">
+                                {{contain.tournament_name}}
                             </a>
                         </h4>
                     </div>
-                    <div id="{{cont.tournament_name}}" class="panel-collapse collapse in">
+                    <div id="{{contain.tournament_name}}" class="panel-collapse collapse in">
                         <div>
-                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.matches" ng-value="sel">{{sel.match_name}}</button>
+                            <button type="button" class="btn btn-default btn-block" ng-repeat="selection in contain.matches" ng-value="selection">{{selection.match_name}}</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-------------------------------------------------------------------------------------->
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">

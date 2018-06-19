@@ -39,7 +39,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.ExecuteNonQuery();
             SqlDataReader dr = sqlCmd.ExecuteReader();
             var result = (int)returnparam.Value;
-           // System.Diagnostics.Debug.WriteLine();
+           //System.Diagnostics.Debug.WriteLine();
             
            
             while (dr.Read())
@@ -225,7 +225,6 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                     DateTime datetmp = (DateTime)reader["admin_date_create"];
                     result.fanatic_name = (string)reader["admin_name"];
                     result.fanatic_last_name = (string)reader["admin_last_name"];
-                    result.fanatic_birth = (string)reader["fanatic_birth"];
                     result.fanatic_date_create = datetmp.ToString("dd-mm-yyyy hh:mm");                    
                     result.fanatic_email = (string)reader["admin_email"];
                     result.fanatic_login = (string)reader["admin_username"];

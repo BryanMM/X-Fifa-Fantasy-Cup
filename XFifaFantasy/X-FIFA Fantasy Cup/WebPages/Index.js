@@ -199,11 +199,11 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
 login.controller("adminCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = true;
 
-    $scope.tournament;
+    $scope.adminTournament;
     $http.get(Host + "/api/tournament/gettournaments").
         then((promise) => {
             let mydata = promise.data;
-            $scope.tournament = mydata;
+            $scope.adminTournament = mydata;
 
         });
 
@@ -271,7 +271,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         
         var it1 = -1;
         var check1 = "";
-        while (check1 !== $scope.searchProv) {
+        while (check1 != $scope.searchProv) {
             it1 += 1;
             check1 = $scope.selectCountry[it1];
             
@@ -371,7 +371,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
     $scope.chooseDaylist = function () {
         var monthcheck = ["01", "03", "05", "07", "09", "11"];
-        if ($scope.month === "02") {
+        if ($scope.month == "02") {
             $scope.daylist = $scope.daylist1;
         } else if (monthcheck.indexOf($scope.month) > -1) {
             $scope.daylist = $scope.daylist2;
@@ -380,22 +380,34 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         }
     }
 
+
     $scope.availableCountry = $scope.selectCountry;
-    $scope.winnerList = []
+    var listLength = $scope.selectCountry.length;
+    console.log(listLength);
+    $scope.winnerList = [];
 
     $scope.addFight = function () {
+        console.log($scope.country);
+        var i;
+        var flag = false;
+        for (i = 0; i < $scope.country.length; i++) {
+            if ($scope.country[i].Name === $scope.team1) {
+                flag = true;
+            }
 
-        if ($scope.selectCountry.includes($scope.team1)) {
+        }
+
+        if (flag) {
             var it1 = -1;
             var it2 = -1;
             var check1 = "";
             var check2 = "";
-            while (check1 !== $scope.team1) {
+            while (check1 != $scope.team1) {
                 it1 += 1;
                 check1 = $scope.selectCountry[it1];
                
             }
-            while (check2 !== $scope.team2) {
+            while (check2 != $scope.team2) {
                 it2 += 1;
                 check2 = $scope.selectCountry[it2];
                
@@ -415,11 +427,12 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
             }).
                 then((promise) => {
-                    if (promise.data.success === "true") {
+                    if (promise.data.Success === "true") {
                         var xmatchId = promise.data.stagexmatch_id;
-                        var xmatchName = promise.data.stagexmatxh_name;
-                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
+                        var xmatchName = promise.data.stagexmatch_name;
+                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName, "snum": 2 });
                         $scope.availableCountry.push(xmatchName);
+
                         $scope.showMatch.push("Match" + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + " VS " + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
@@ -433,39 +446,49 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
         }
         else {
+            
+            console.log($scope.winnerList);
             var it1 = -1;
             var it2 = -1;
             var check1 = "";
             var check2 = "";
-            while (check1 !== $scope.team1) {
+            while (check1 != $scope.team1) {
                 it1 += 1;
                 check1 = $scope.availableCountry[it1];
                 
             }
-            while (check2 !== $scope.team2) {
+            while (check2 != $scope.team2) {
                 it2 += 1;
                 check2 = $scope.availableCountry[it2];
                 
             }
+            console.log($scope.availableCountry);
+            console.log(it1);
+            console.log(listLength);
+            var tempid = {};
+            var tempid2 = {};
+            tempid = $scope.winnerList[listLength - it1];
+            tempid2 = $scope.winnerList[listLength - it2];
 
             $http.post(Host + "/api/tournament/addmatch", {
                 "tournament_id": tourID,
                 "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
-                "stage_id": "1",
+                "stage_id": tempid["snum"] + 1,
                 "txc_team1": "",
                 "txc_team2": "",
-                "sxm_winner1": $scope.availableCountry[it1],
-                "sxm_winner2": $scope.availableCountry[it2],
+                "sxm_winner1": tempid["id"],
+                "sxm_winner2": tempid2["id"],
                 "match_number": matchNumb
 
             }).
                 then((promise) => {
-                    if (promise.data.success === "true") {
+                    if (promise.data.Success === "true") {
                         var xmatchId = promise.data.stagexmatch_id;
-                        var xmatchName = promise.data.stagexmatxh_name;
-                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
+                        var xmatchName = promise.data.stagexmatch_name;
+                        $scope.winnerList.push({ "id": xmatchId, "name": xmatchName, "snum": tempid["snum"] + 1});
                         $scope.availableCountry.push(xmatchName);
+
                         $scope.showMatch.push("Match" + " VS " + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
@@ -551,6 +574,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     $scope.selectForward = [];
     $scope.selectFullback = []
 
+    ///////////////////////////////////////
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
@@ -561,7 +585,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     $scope.showList = [];
 
     $scope.displayList = function () {
-
+        ////////////////////////////
         $http.post(Host + "/api/country/players", {
             "country_id": $scope.searchProv.Id,
             "player_active": 1
@@ -612,6 +636,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.goPrediction = function () {
+        //////////////////////////////// EDITAR URL
         $http.post(Host + "/api/country/players", {
             "userxinfo_id": UserInfo,
             "tournament_id": TourSub,
@@ -633,7 +658,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
     //$scope.temp2 = [{ "team1": "Italy", "team2": "USA", "id1": "1", "id2": "2", "IDM": "1" }, { "team1": "Panama", "team2": "China", "id1": "3", "id2": "4", "IDM": "2" }];
 
     $scope.currentStage = 1;
-
+    ///////////////////
     $http.post(Host + "/api/tournament/getstage", {
         "tournament_id": TourSub,
         "stage_id": 1
@@ -690,7 +715,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
             }
             var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.team_1, "txc_team2": currentJson.team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2, "winner_name": winName, "winner_id": winId };
             $scope.resultList.push(tempJson);
-
+            ////////////////////
             $http.post(Host + "/api/user/sendpredictions", {
                 "userxinfo_id": UserInfo,
                 "matches": $scope.resultList
@@ -704,7 +729,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
             }
             else { 
                 $scope.currentStage += 1;
-
+                //////////////////
                 $http.post(Host + "/api/tournament/getstage", {
                     "tournament_id": TourSub,
                     "stage_id": $scope.currentStage

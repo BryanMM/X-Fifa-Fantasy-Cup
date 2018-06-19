@@ -413,7 +413,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
                         $scope.availableCountry.push(xmatchName);
                         $scope.showMatch.push("Match" + matchNumb.toString());
-                        $scope.showMatch.push($scope.team1 + $scope.team2);
+                        $scope.showMatch.push($scope.team1 + "VS" + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);
                         matchNumb += 1;
@@ -458,7 +458,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         var xmatchName = promise.data.stagexmatxh_name;
                         $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
                         $scope.availableCountry.push(xmatchName);
-                        $scope.showMatch.push("Match" + matchNumb.toString());
+                        $scope.showMatch.push("Match" + "VS" + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);
@@ -536,6 +536,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     
 
     $scope.selectCountry;
+    $scope.budget = 100;
 
     $scope.selectMidfielder = [];
     $scope.selectGoalkeeper = [];
@@ -578,20 +579,27 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.insertPlayer = function () {
-        $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
-        if ($scope.selectedPlayer.position === "Goalkeeper") {
-            $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
-        }
-        else if ($scope.selectedPlayer.position === "Midfielder") {
-            $scope.selectMidfielder.push($scope.selectedPlayer.player_name);
 
-        }
-        else if ($scope.selectedPlayer.position === "Forward") {
-            $scope.selectForward.push($scope.selectedPlayer.player_name);
+        if (($scope.budget - parseFloat($scope.selectedPlayer.price)) >= 0) {
+            $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
+            $scope.budget -= parseFloat($scope.selectedPlayer.price);
+            if ($scope.selectedPlayer.position === "Goalkeeper") {
+                $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
+            }
+            else if ($scope.selectedPlayer.position === "Midfielder") {
+                $scope.selectMidfielder.push($scope.selectedPlayer.player_name);
 
+            }
+            else if ($scope.selectedPlayer.position === "Forward") {
+                $scope.selectForward.push($scope.selectedPlayer.player_name);
+
+            }
+            else {
+                $scope.selectFullback.push($scope.selectedPlayer.player_name);
+            }
         }
         else {
-            $scope.selectFullback.push($scope.selectedPlayer.player_name);
+            
         }
     }
 

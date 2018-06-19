@@ -623,14 +623,14 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
             $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
             $scope.budget = $scope.budget - $scope.selectedPlayer.player_price;
             
-            if ($scope.selectedPlayer.position === "Goalkeeper") {
+            if ($scope.selectedPlayer.playerxposition_name === "Goalkeeper") {
                 $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
             }
-            else if ($scope.selectedPlayer.position === "Midfielder") {
+            else if ($scope.selectedPlayer.playerxposition_name === "Midfielder") {
                 $scope.selectMidfielder.push($scope.selectedPlayer.player_name);
 
             }
-            else if ($scope.selectedPlayer.position === "Forward") {
+            else if ($scope.selectedPlayer.playerxposition_name === "Forward") {
                 $scope.selectForward.push($scope.selectedPlayer.player_name);
 
             }

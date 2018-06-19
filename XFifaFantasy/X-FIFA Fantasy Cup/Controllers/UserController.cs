@@ -15,8 +15,25 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 {
     public class UserController : ApiController
     {
-       
 
+        [HttpPost]
+        [ActionName("sendfantasy")]
+        public JsonResult<DbConnection> sendfantasy(UserxFantasy userxFantasy)
+        {
+            DbConnection constructor = new DbConnection();
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            myConnection.Open();
+            foreach(int i in userxFantasy.players)
+            {
+                string action = "insert into userxfantasy values(" + userxFantasy.userxinfo_id + "," + i + "," + userxFantasy.tournament_id + ")";
+                SqlCommand sqlCmd = new SqlCommand("checkuser", myConnection);
+                sqlCmd.ExecuteNonQuery();
+            }
+            constructor.success = "true";
+            myConnection.Close();
+            return Json(constructor);                       
+        }
         [ActionName("login")]
         public JsonResult<DbConnection> login(LoginDetails data)
         {

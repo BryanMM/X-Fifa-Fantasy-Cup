@@ -227,32 +227,59 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertadminmatch", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
+            System.Diagnostics.Debug.WriteLine(match.stage_id +" "+ match.sxm_winner1 +" "+ match.sxm_winner2+" "  + match.tournament_id+" " + match.txc_team_1+" " + match.txc_team_2+" " + match.match_date + match.match_location);
             sqlCmd.Parameters.Add(new SqlParameter("@match_date", match.match_date));
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
             sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team_1));
             sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team_2));
-            sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner1", match.sxm_winner1));
-            sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner2", match.sxm_winner2));
-            var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
-            sqlCmd.Parameters.Add(returnparam);
-            sqlCmd.ExecuteNonQuery();
-            int result = (int)returnparam.Value;
-            if (result > 0)
+            if (match.sxm_winner1.ToString() != "")
             {
-                constructor.success = "true";
-                constructor.detail_type = result.ToString();
-                return Json(constructor);
+                System.Diagnostics.Debug.WriteLine("entrando al coso");
+                sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner1", match.sxm_winner1));
+                sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner2", match.sxm_winner2));
+                var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+                sqlCmd.Parameters.Add(returnparam);
+                sqlCmd.ExecuteNonQuery();
+                int result = (int)returnparam.Value;
+                if (result > 0)
+                {
+                    constructor.success = "true";
+                    constructor.detail_type = result.ToString();
+                    return Json(constructor);
+                }
+                else
+                {
+                    
+                    constructor.success = "false";
+                    constructor.detail_type = "Error while inserting the tournament";
+                    return Json(constructor);
+                }
             }
             else
             {
-                constructor.success = "false";
-                constructor.detail_type = "Error while inserting the tournament";
-                return Json(constructor);
+                System.Diagnostics.Debug.WriteLine("no entro al coso");
+                var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+                sqlCmd.Parameters.Add(returnparam);
+                sqlCmd.ExecuteNonQuery();
+                int result = (int)returnparam.Value;
+                if (result > 0)
+                {
+                    constructor.success = "true";
+                    constructor.detail_type = result.ToString();
+                    return Json(constructor);
+                }
+                else
+                {
+                    constructor.success = "false";
+                    constructor.detail_type = "Error while inserting the tournament";
+                    return Json(constructor);
+                }
             }
 
         }
+        /*
         [HttpPost]
         [ActionName("GetStage")]
         public JsonResult<Match> getstage(Match match)
@@ -288,6 +315,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             {
 
             }
+            */
 
         }
 
@@ -297,5 +325,5 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
 
     }
-}
+
 

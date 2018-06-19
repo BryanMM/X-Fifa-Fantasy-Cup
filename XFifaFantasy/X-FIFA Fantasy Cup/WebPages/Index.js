@@ -66,7 +66,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       $location.path("/userCalendar");
+       //$location.path("/userCalendar");
         
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -560,11 +560,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.addPlayer = function (thePlayer) {
-        <h3>Price: {{ playerPrice }}</h3>
-        <h3>Name: {{ playerName }}</h3>
-        <h3>Country: {{ playerCountry }}</h3>
-        <h3>Playing position: {{ playerPosition }}</h3>
-        <h3>Statistics: {{ playerStatistics }}</h3>
+        
 
     }
 

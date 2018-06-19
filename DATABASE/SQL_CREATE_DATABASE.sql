@@ -97,9 +97,7 @@ CREATE TABLE userxinfo(
 	userxinfo_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	user_type_id INT FOREIGN KEY REFERENCES user_type(user_type_id),
 	country_id INT FOREIGN KEY REFERENCES country(country_id),
-	fanatic_login VARCHAR(8) FOREIGN KEY REFERENCES fanatic(fanatic_login),
-	uxi_champ_note int default(0),
-	uxi_fantasy_note int default(0)
+	fanatic_login VARCHAR(8) FOREIGN KEY REFERENCES fanatic(fanatic_login)
 );
 
 CREATE TABLE playerxinfo(
@@ -127,7 +125,9 @@ create table userxfantasy(
 	userxfantasy_id int identity(1,1) primary key not null,
 	userxinfo_id int foreign key references userxinfo(userxinfo_id),
 	playerxinfo_id int foreign key references playerxinfo(playerxinfo_id),
-	tournament_id int foreign key references tournament(tournament_id)
+	tournament_id int foreign key references tournament(tournament_id),
+	userxfantasy_champ_note int default(0),
+	userxfantasy_fantasy_note int default(0)
 );
 
 create table powerup(
@@ -246,7 +246,7 @@ exec insertadminmatch @match_date='2-1-2018 9:00',@match_location='Costa Rica',@
 exec insertadminmatch @match_date='3-1-2018 9:00',@match_location='Costa Rica',@stage_id=2,@txc_team_1=1,@txc_team_2=3,@tournament_id=1;
 exec insertadminmatch @match_date='4-1-2018 9:00',@match_location='Costa Rica',@stage_id=2,@txc_team_1=3,@txc_team_2=2,@tournament_id=1;
 
-insert into player values('1234','Juan' ,'Núñez','1-1-1980',180,85,'Pollitos FC',10,1,'C:/program files'),('3456','Carlos' ,'Núñez','1-1-1975',180,85,'Pollitos FC',10,1,'C:/program files');
+insert into player values('1234','Juan' ,'Núñez','1-1-1980',180,85,'Pollitos FC',10,1,'C:/program files',0),('3456','Carlos' ,'Núñez','1-1-1975',180,85,'Pollitos FC',10,1,'C:/program files',0);
 insert into playerxposition values(1,'Goalkeeper'),(2,'Fullback'),(3,'Midfielder'),(4,'Forward');
 insert into playerxinfo(country_id,playerxposition_id,player_id) values(1,2,'1234'),(1,3,'3456');
 insert into eventmatch(action_name,action_value) values('Goal goalkeeper',8),

@@ -21,7 +21,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         {
             List<Tournament> results = new List<Tournament>();
             Tournament tmp = null;
-            string action = "SELECT * FROM TOURNAMENT";
+            string action = "SELECT * FROM TOURNAMENT WHERE TOURNAMENT_AVAILABLE = 1";
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             myConnection.Open();
@@ -89,6 +89,20 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
             myConnection.Close();
             return Json(results);
+        }
+        [HttpPost]
+        [ActionName("finishtour")]
+        public void finishtour(Tournament tournament)
+        {
+            DbConnection constructor = new DbConnection();
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            myConnection.Open();
+            string action = "UPDATE TOURNAMENT SET TOURNAMENT_AVAILABLE = 1 WHERE TOURNAMENT_ID =" + Int32.Parse(tournament.tournament_id.ToString());
+            SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteReader();
+            myConnection.Close();
         }
         [HttpPost]
         [ActionName("AddPowerup")]
@@ -232,11 +246,12 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team1));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team2));
+
             if (match.sxm_winner1 != "")
             {
-                System.Diagnostics.Debug.WriteLine("entrando al coso");
+
+                System.Diagnostics.Debug.WriteLine("entrando al coso"+"   winner1 "+match.sxm_winner1 + "  winner2 "+ match.sxm_winner2 );
+                
                 sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner1", match.sxm_winner1));
                 sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner2", match.sxm_winner2));
                 var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
@@ -259,6 +274,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
             else
             {
+                sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team1));
+                sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team2));
                 System.Diagnostics.Debug.WriteLine("no entro al coso");
                 var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
                 sqlCmd.Parameters.Add(returnparam);

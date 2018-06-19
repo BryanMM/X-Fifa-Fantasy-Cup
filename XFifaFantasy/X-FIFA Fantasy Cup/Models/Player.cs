@@ -9,6 +9,7 @@ namespace X_FIFA_Fantasy_Cup.Models
     {
         public string player_id { get; set; }
         public int player_grade { get; set; }
+        public string playerxposition_name { get; set; }
         public int country_id { get; set; }
         public int playerxinfo_id { get; set; }
         public string player_name { get; set; }

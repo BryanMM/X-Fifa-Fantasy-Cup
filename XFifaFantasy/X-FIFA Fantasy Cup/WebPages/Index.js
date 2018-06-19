@@ -618,9 +618,11 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.insertPlayer = function () {
 
-        if (($scope.budget - parseFloat($scope.selectedPlayer.player_price)) >= 0) {
+        if (($scope.budget - $scope.selectedPlayer.player_price) >= 0) {
+
             $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
-            $scope.budget -= parseFloat($scope.selectedPlayer.price);
+            $scope.budget = $scope.budget - $scope.selectedPlayer.player_price;
+            
             if ($scope.selectedPlayer.position === "Goalkeeper") {
                 $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
             }

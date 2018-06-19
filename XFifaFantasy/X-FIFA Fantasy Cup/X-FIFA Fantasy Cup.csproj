@@ -121,6 +121,7 @@
     <Compile Include="Models\Stats.cs" />
     <Compile Include="Models\tourmamentxcountry.cs" />
     <Compile Include="Models\Tournament.cs" />
+    <Compile Include="Models\UserxFantasy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

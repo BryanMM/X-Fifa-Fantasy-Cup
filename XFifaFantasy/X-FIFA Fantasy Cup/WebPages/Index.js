@@ -179,6 +179,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
 //UserCalendar controller////////////////////////////////
 login.controller("userCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = true;
+    $scope.naration = false;
 
     $scope.tournament;
     $http.get(Host + "/api/tournament/gettournaments").
@@ -187,6 +188,10 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
             $scope.tournament = mydata;
 
         });
+
+    $scope.openNaration = function (place) {
+        $scope.naration = true;
+    }
 
     $scope.subTournament = function (theId) {
         TourSub = theId.tournament_id;
@@ -217,7 +222,6 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.name = true;
     $scope.teams = false;
     $scope.matches = false;
-    $scope.stages = false;
     var tourID = "";
 
     //Names Configuration/////////////////////////////////////////////
@@ -313,6 +317,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
 
     var xmatchId = [];
+    var listLength;
 
     $scope.goMatches = function () {
 
@@ -332,6 +337,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                 if (promise.data.success === "true") {
                     $scope.teams = false;
                     $scope.matches = true;
+                    listLength = $scope.selectCountry.length;
                     xmatchId = promise.data.tournamentxcoutnry_id
                 }
             });
@@ -347,7 +353,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.showMatch = [];
     
     $scope.yearlist = [];
-    for (i = 2017; i >= 1900; i--) {
+    for (i = 2022; i >= 2018; i--) {
         $scope.yearlist.push(i);
     }
     $scope.monthlist = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
@@ -382,11 +388,11 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
 
     $scope.availableCountry = $scope.selectCountry;
-    var listLength = $scope.selectCountry.length;
-    console.log(listLength);
+    
     $scope.winnerList = [];
 
     $scope.addFight = function () {
+        console.log(listLength);
         console.log($scope.country);
         var i;
         var flag = false;
@@ -462,19 +468,22 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                 check2 = $scope.availableCountry[it2];
                 
             }
-            console.log($scope.availableCountry);
+            
             console.log(it1);
             console.log(listLength);
             var tempid = {};
             var tempid2 = {};
-            tempid = $scope.winnerList[listLength - it1];
-            tempid2 = $scope.winnerList[listLength - it2];
+            tempid = $scope.winnerList[it1 - listLength];
+            tempid2 = $scope.winnerList[it2 - listLength];
+
+            console.log(tempid);
+            console.log(tempid2);
 
             $http.post(Host + "/api/tournament/addmatch", {
                 "tournament_id": tourID,
                 "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
-                "stage_id": tempid["snum"] + 1,
+                "stage_id": tempid["snum"],
                 "txc_team1": "",
                 "txc_team2": "",
                 "sxm_winner1": tempid["id"],
@@ -503,16 +512,13 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     
 
     $scope.goStages = function () {
-        $scope.matches = false;
-        $scope.stages = true;
+        $http.post(Host + "/api/Tournament/finishtour", {
+            tournament_id: tourID
+        }).
+            then((promise) => {
+                $location.path("/adminCalendar");
+            });
 
-    }
-
-
-    //Stages configuration//////////////////////////////////////////////
-    $scope.addMatch = function () {
-        tempvs = $scope.team1 + " vs " + $scope.team2;
-        $scope.matchList.push(tempvs);
     }
 
 });
@@ -602,9 +608,9 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.addPlayer = function (thePlayer) {
         $scope.playerName = thePlayer.player_name;
-        $scope.playerPrice = thePlayer.price;
-        $scope.playerPosition = thePlayer.position;
-        $scope.playerStatistics = thePlayer.statistics;
+        $scope.playerPrice = thePlayer.player_price;
+        $scope.playerPosition = thePlayer.playerxposition_name;
+        $scope.playerStatistics = thePlayer.player_grade;
         $scope.playerCountry = $scope.searchProv.Name;
         $scope.selectedPlayer = thePlayer;
 
@@ -612,17 +618,19 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.insertPlayer = function () {
 
-        if (($scope.budget - parseFloat($scope.selectedPlayer.price)) >= 0) {
+        if (($scope.budget - $scope.selectedPlayer.player_price) >= 0) {
+
             $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
-            $scope.budget -= parseFloat($scope.selectedPlayer.price);
-            if ($scope.selectedPlayer.position === "Goalkeeper") {
+            $scope.budget = $scope.budget - $scope.selectedPlayer.player_price;
+            
+            if ($scope.selectedPlayer.playerxposition_name === "Goalkeeper") {
                 $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
             }
-            else if ($scope.selectedPlayer.position === "Midfielder") {
+            else if ($scope.selectedPlayer.playerxposition_name === "Midfielder") {
                 $scope.selectMidfielder.push($scope.selectedPlayer.player_name);
 
             }
-            else if ($scope.selectedPlayer.position === "Forward") {
+            else if ($scope.selectedPlayer.playerxposition_name === "Forward") {
                 $scope.selectForward.push($scope.selectedPlayer.player_name);
 
             }
@@ -636,8 +644,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.goPrediction = function () {
-        //////////////////////////////// EDITAR URL
-        $http.post(Host + "/api/country/players", {
+        $http.post(Host + "/api/user/sendfantasy", {
             "userxinfo_id": UserInfo,
             "tournament_id": TourSub,
             "players": $scope.listPlayer

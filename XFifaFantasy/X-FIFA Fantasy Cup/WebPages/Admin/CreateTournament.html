@@ -165,41 +165,6 @@
                         </div>
                     </div>
 
-                    <!--PowerUps tab-->
-                    <div ng-show="stages" class="tabcontent">
-                        <div class="row" style="padding-top: 10px;">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <select class="form-control" ng-model="team1">
-                                        <option value="" disabled selected>Search team 1</option>
-                                        <option ng-repeat="team1count in selectCountry" ng-value="team1count">{{team1count}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" ng-model="team2">
-                                        <option value="" disabled selected>Search team 2</option>
-                                        <option ng-repeat="team2count in selectCountry" ng-value="team2count">{{team2count}}</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <button type="submit" class="btn btn-danger btn-block" ng-click="addMatch()">Add Match</button>
-                                </div>
-
-                            </div>
-                            <div class="col-md-5">
-                                <div class="vertical-menu-player">
-                                    <ul class="list-group">
-                                        <li class="list-group-item" ng-repeat="match in matchList" ng-value="match">{{match}}</li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                            <div class="col-md-1">
-                                <button type="submit" class="btn" ng-click=""><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

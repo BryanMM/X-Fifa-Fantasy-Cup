@@ -44,7 +44,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         {
             List<Player> results = new List<Player>();
             Player tmp = null;
-            string action = "select py.player_id,py.player_name,py.player_last_name,py.player_price,py.player_grade,pxi.playerxinfo_id from player as py left outer join playerxinfo as pxi on(py.player_id = pxi.player_id) left outer join playerxposition as pxp on(pxi.playerxposition_id = pxp.playerxposition_id) where pxi.country_id = +" + player.country_id+" and py.player_active = "+player.player_active;
+            string action = "select py.player_id,py.player_name,py.player_last_name,py.player_price,py.player_grade,pxi.playerxinfo_id,pxp.playerxposition_name from player as py left outer join playerxinfo as pxi on(py.player_id = pxi.player_id)left outer join playerxposition as pxp on(pxi.playerxposition_id = pxp.playerxposition_id) where pxi.country_id =" + player.country_id+" and py.player_active = "+player.player_active;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -61,6 +61,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 tmp.player_price = float.Parse(reader["player_price"].ToString());
                 tmp.playerxinfo_id = (int)reader["playerxinfo_id"];
                 tmp.player_grade = (int)reader["player_grade"];
+                tmp.playerxposition_name = (string)reader["playerxposition_name"];
 
                 results.Add(tmp);
             }

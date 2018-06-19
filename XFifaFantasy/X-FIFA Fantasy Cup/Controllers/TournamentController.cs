@@ -21,7 +21,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
         {
             List<Tournament> results = new List<Tournament>();
             Tournament tmp = null;
-            string action = "SELECT * FROM TOURNAMENT";
+            string action = "SELECT * FROM TOURNAMENT WHERE TOURNAMENT_AVAILABLE = 1";
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             myConnection.Open();
@@ -33,8 +33,8 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 tmp = new Tournament();
                 tmp.tournament_id = (int)reader["tournament_id"];
                 tmp.tournament_name = (string)reader["tournament_name"];
-                
-                string actiontmp = "select * from tournamentxstage full outer join stagexmatch on stagexmatch.txs_id = tournamentxstage.txs_id where tournamentxstage.tournament_id = "+tmp.tournament_id;
+
+                string actiontmp = "select * from tournamentxstage full outer join stagexmatch on stagexmatch.txs_id = tournamentxstage.txs_id where tournamentxstage.tournament_id = " + tmp.tournament_id;
 
                 SqlCommand sqlCmdtmp = new SqlCommand(actiontmp, myConnection);
                 sqlCmdtmp.CommandType = CommandType.Text;
@@ -89,6 +89,20 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
             myConnection.Close();
             return Json(results);
+        }
+        [HttpPost]
+        [ActionName("finishtour")]
+        public void finishtour(Tournament tournament)
+        {
+            DbConnection constructor = new DbConnection();
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            myConnection.Open();
+            string action = "UPDATE TOURNAMENT SET TOURNAMENT_AVAILABLE = 1 WHERE TOURNAMENT_ID =" + Int32.Parse(tournament.tournament_id.ToString());
+            SqlCommand sqlCmd = new SqlCommand(action, myConnection);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteReader();
+            myConnection.Close();
         }
         [HttpPost]
         [ActionName("AddPowerup")]
@@ -227,16 +241,17 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertadminmatch", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            System.Diagnostics.Debug.WriteLine(match.stage_id +" "+ match.sxm_winner1 +" "+ match.sxm_winner2+" "  + match.tournament_id+" " + match.txc_team1+" " + match.txc_team2+" " + match.match_date + match.match_location);
+            System.Diagnostics.Debug.WriteLine(match.stage_id + " " + match.sxm_winner1 + " " + match.sxm_winner2 + " " + match.tournament_id + " " + match.txc_team1 + " " + match.txc_team2 + " " + match.match_date + match.match_location);
             sqlCmd.Parameters.Add(new SqlParameter("@match_date", match.match_date));
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team1));
-            sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team2));
+
             if (match.sxm_winner1 != "")
             {
-                System.Diagnostics.Debug.WriteLine("entrando al coso");
+
+                System.Diagnostics.Debug.WriteLine("entrando al coso"+"   winner1 "+match.sxm_winner1 + "  winner2 "+ match.sxm_winner2 );
+                
                 sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner1", match.sxm_winner1));
                 sqlCmd.Parameters.Add(new SqlParameter("@sxm_winner2", match.sxm_winner2));
                 var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
@@ -247,18 +262,20 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 {
                     constructor.Success = "true";
                     constructor.stagexmatch_id = result;
-                    constructor.stagexmatch_name = "winner of match "+match.match_number;
+                    constructor.stagexmatch_name = "winner of match " + match.match_number;
                     return Json(constructor);
                 }
                 else
                 {
-                    
+
                     constructor.Success = "false";
                     return Json(constructor);
                 }
             }
             else
             {
+                sqlCmd.Parameters.Add(new SqlParameter("@txc_team_1", match.txc_team1));
+                sqlCmd.Parameters.Add(new SqlParameter("@txc_team_2", match.txc_team2));
                 System.Diagnostics.Debug.WriteLine("no entro al coso");
                 var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
                 sqlCmd.Parameters.Add(returnparam);
@@ -267,7 +284,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 if (result > 0)
                 {
                     constructor.Success = "true";
-                    constructor.stagexmatch_id= result;
+                    constructor.stagexmatch_id = result;
                     constructor.stagexmatch_name = "winner of match " + match.match_number;
                     return Json(constructor);
                 }
@@ -279,12 +296,15 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
 
         }
-        
+
         [HttpPost]
-        [ActionName("GetStage")]
-        public JsonResult<AdminMatch> getstage(AdminMatch match)
+        [ActionName("getstage")]
+        public JsonResult<List<AdminMatch>> getstage(AdminMatch match)
         {
-            Match constructor = new Match();
+            List<AdminMatch> results = new List<AdminMatch>();
+            AdminMatch constructor = null;
+            Match tmp1 = null;
+            Match tmp2 = null;
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -303,19 +323,69 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 sqlCmd.ExecuteNonQuery();
                 SqlDataReader dr = sqlCmd.ExecuteReader();
                 // System.Diagnostics.Debug.WriteLine();
-               while (dr.Read())
+                while (dr.Read())
                 {
-                    constructor.match_id =(int) dr["match_id"] ;
-                    constructor. = (string)dr["user_type"].ToString();
-                    constructor.detail_xinfo = (string)dr["user_login"].ToString();
-                    constructor.detail_status = (string)dr["user_active"].ToString();
+                    constructor = new AdminMatch();
+                    constructor.match_id = (int)dr["match_id"];
+                    constructor.name_team_1 = (string)dr["name_team_1"];
+                    constructor.name_team_2 = (string)dr["name_team_2"];
+                    constructor.team_1 = (string)dr["team_1"];
+                    constructor.team_2 = (string)dr["team_2"];
+                    results.Add(constructor);
                 }
+                return Json(results);
             }
             else
             {
+                SqlCommand sqlCmd = new SqlCommand("getnextstage", myConnection);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                System.Diagnostics.Debug.WriteLine(DateTime.Parse(match.match_date));
+                sqlCmd.Parameters.Add(new SqlParameter("@next_stage", match.stage_id));
+                sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
+                var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+                sqlCmd.Parameters.Add(returnparam);
+                sqlCmd.ExecuteNonQuery();
+                int result = (int)returnparam.Value;
+                sqlCmd.ExecuteNonQuery();
+                SqlDataReader dr = sqlCmd.ExecuteReader();
+                // System.Diagnostics.Debug.WriteLine();
+                while (dr.Read())
+                {
+                    constructor = new AdminMatch();
+                    constructor.match_id = (int)dr["match_id"];
+                    string action = "SELECT * FROM USERXSCORE WHERE USERXSCORE.MATCH_ID= " + constructor.team_1 + "and USERXINFO_ID =" + dr["team_1"];
+                    SqlCommand sqlCmd2 = new SqlCommand(action, myConnection);
+                    sqlCmd2.CommandType = CommandType.Text;
+                    var reader2 = sqlCmd2.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        tmp1 = new Match();
+                        tmp1.winner_id = (string)reader2["winner_id"];
+                        tmp1.winner_name = (string)reader2["winner_name"];
+                    }
+                    constructor.name_team_1 = tmp1.winner_name;
+                    constructor.team_1 = tmp1.winner_id;
+                    string action2 = "SELECT * FROM USERXSCORE WHERE USERXSCORE.MATCH_ID= " + constructor.team_2 + "and USERXINFO_ID =" + dr["team_2"];
+                    SqlCommand sqlCmd3 = new SqlCommand(action2, myConnection);
+                    sqlCmd2.CommandType = CommandType.Text;
+                    var reader3 = sqlCmd2.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        tmp2 = new Match();
+                        tmp2.winner_id = (string)reader2["winner_id"];
+                        tmp2.winner_name = (string)reader2["winner_name"];
+                    }
+                    constructor.name_team_2 = tmp2.winner_name;
+                    constructor.team_2 = tmp2.winner_id;
+                    results.Add(constructor);
+
+
+                }
+                return Json(results);
 
             }
-            
+
+
 
         }
 
@@ -325,5 +395,6 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 
 
     }
+}
 
 

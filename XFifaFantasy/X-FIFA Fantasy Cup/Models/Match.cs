@@ -21,6 +21,8 @@ namespace X_FIFA_Fantasy_Cup.Models
         public int sxm_winner1 { get; set; }
         public int sxm_winner2 { get; set; }
         public int match_number { get; set; }
+        public string winner_name { get; set; }
+        public string winner_id { get; set; }
 
     }
 }

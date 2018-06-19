@@ -413,7 +413,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
                         $scope.availableCountry.push(xmatchName);
                         $scope.showMatch.push("Match" + matchNumb.toString());
-                        $scope.showMatch.push($scope.team1 + "VS" + $scope.team2);
+                        $scope.showMatch.push($scope.team1 + " VS " + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);
                         matchNumb += 1;
@@ -458,7 +458,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                         var xmatchName = promise.data.stagexmatxh_name;
                         $scope.winnerList.push({ "id": xmatchId, "name": xmatchName });
                         $scope.availableCountry.push(xmatchName);
-                        $scope.showMatch.push("Match" + "VS" + matchNumb.toString());
+                        $scope.showMatch.push("Match" + " VS " + matchNumb.toString());
                         $scope.showMatch.push($scope.team1 + $scope.team2);
                         $scope.showMatch.push($scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"));
                         $scope.showMatch.push($scope.location);

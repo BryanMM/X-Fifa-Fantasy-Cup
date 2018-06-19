@@ -67,7 +67,7 @@ as begin
 end;
 go;
 create procedure insertplayer
-	@p_passport int,
+	@p_passport varchar(8),
 	@p_name varchar(30),
 	@p_lastname varchar(30),
 	@p_birthdate varchar(255),

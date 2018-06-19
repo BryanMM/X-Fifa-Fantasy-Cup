@@ -7,6 +7,7 @@ namespace X_FIFA_Fantasy_Cup.Models
 {
     public class AdminMatch
     {
+        public string userxinfo_id { get; set; }
         public int tournament_id { get; set; }
         public int match_id { get; set; }
         public string name_team_1 { get; set; }

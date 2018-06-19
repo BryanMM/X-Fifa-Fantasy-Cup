@@ -608,9 +608,9 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.addPlayer = function (thePlayer) {
         $scope.playerName = thePlayer.player_name;
-        $scope.playerPrice = thePlayer.price;
-        $scope.playerPosition = thePlayer.position;
-        $scope.playerStatistics = thePlayer.statistics;
+        $scope.playerPrice = thePlayer.player_price;
+        $scope.playerPosition = thePlayer.playerxposition_name;
+        $scope.playerStatistics = thePlayer.player_grade;
         $scope.playerCountry = $scope.searchProv.Name;
         $scope.selectedPlayer = thePlayer;
 
@@ -618,7 +618,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.insertPlayer = function () {
 
-        if (($scope.budget - parseFloat($scope.selectedPlayer.price)) >= 0) {
+        if (($scope.budget - parseFloat($scope.selectedPlayer.player_price)) >= 0) {
             $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
             $scope.budget -= parseFloat($scope.selectedPlayer.price);
             if ($scope.selectedPlayer.position === "Goalkeeper") {

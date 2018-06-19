@@ -130,7 +130,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
     }
     $scope.chooseDaylist = function () {
         var monthcheck = ["01", "03", "05", "07", "09", "11"];
-        if ($scope.month == "02") {
+        if ($scope.month === "02") {
             $scope.daylist = $scope.daylist1;
         } else if (monthcheck.indexOf($scope.month) > -1) {
             $scope.daylist = $scope.daylist2;
@@ -183,14 +183,13 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
     $scope.tournament;
     $http.get(Host + "/api/tournament/gettournaments").
         then((promise) => {
-            console.log("ADIOS");
             let mydata = promise.data;
             $scope.tournament = mydata;
 
         });
 
-    $scope.subTournament = function () {
-        //AGREGAR TOUR SUB
+    $scope.subTournament = function (theId) {
+        TourSub = theId.tournament_id;
         $location.path("/subscribe");
     }
 
@@ -199,6 +198,15 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
 //AdminCalendar Controller///////////////////////////////
 login.controller("adminCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItemAdmin = true;
+
+    $scope.tournament;
+    $http.get(Host + "/api/tournament/gettournaments").
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.tournament = mydata;
+
+        });
+
     $scope.goTour = function () {
         $location.path("/createTournament");
     }
@@ -263,7 +271,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
         
         var it1 = -1;
         var check1 = "";
-        while (check1 != $scope.searchProv) {
+        while (check1 !== $scope.searchProv) {
             it1 += 1;
             check1 = $scope.selectCountry[it1];
             
@@ -363,7 +371,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
     $scope.chooseDaylist = function () {
         var monthcheck = ["01", "03", "05", "07", "09", "11"];
-        if ($scope.month == "02") {
+        if ($scope.month === "02") {
             $scope.daylist = $scope.daylist1;
         } else if (monthcheck.indexOf($scope.month) > -1) {
             $scope.daylist = $scope.daylist2;
@@ -382,12 +390,12 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             var it2 = -1;
             var check1 = "";
             var check2 = "";
-            while (check1 != $scope.team1) {
+            while (check1 !== $scope.team1) {
                 it1 += 1;
                 check1 = $scope.selectCountry[it1];
                
             }
-            while (check2 != $scope.team2) {
+            while (check2 !== $scope.team2) {
                 it2 += 1;
                 check2 = $scope.selectCountry[it2];
                
@@ -429,12 +437,12 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
             var it2 = -1;
             var check1 = "";
             var check2 = "";
-            while (check1 != $scope.team1) {
+            while (check1 !== $scope.team1) {
                 it1 += 1;
                 check1 = $scope.availableCountry[it1];
                 
             }
-            while (check2 != $scope.team2) {
+            while (check2 !== $scope.team2) {
                 it2 += 1;
                 check2 = $scope.availableCountry[it2];
                 
@@ -692,7 +700,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
                 });
 
             if ($scope.matchList.length === 1){
-                $location.path("userCalendar");
+                $location.path("/userCalendar");
             }
             else { 
                 $scope.currentStage += 1;

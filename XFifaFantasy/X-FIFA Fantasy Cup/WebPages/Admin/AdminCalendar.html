@@ -1,6 +1,25 @@
 ﻿<div class="container">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
+
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" ng-repeat="cont in tournament" ng-value="cont">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#{{cont.tournament_name}}">
+                                {{cont.tournament_name}}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="{{cont.tournament_name}}" class="panel-collapse collapse in">
+                        <div>
+                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.matches" ng-value="sel">{{sel.match_name}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------------------------------------------------------------------->
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -55,7 +74,7 @@
                 <input class="btn btn-lg btn-warning btn-block" type="button" ng-click="goTour()" value="Create Tournament" style="font-size: small;">
             </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h3>Naraciooooooooooooooooooooooooooooooooooooooooooooon</h3>
         </div>
     </div>

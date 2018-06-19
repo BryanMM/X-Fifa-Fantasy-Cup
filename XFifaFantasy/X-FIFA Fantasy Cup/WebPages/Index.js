@@ -191,6 +191,7 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
 
     $scope.openNaration = function (place) {
         $scope.naration = true;
+        $scope.matchName = place.match_name;
     }
 
     $scope.subTournament = function (theId) {
@@ -211,6 +212,12 @@ login.controller("adminCalendar", function ($scope, $rootScope, $location, $http
             $scope.adminTournament = mydata;
 
         });
+
+    $scope.openNaration = function (place) {
+        $scope.naration = true;
+        $scope.matchName = place.match_name;
+    }
+
 
     $scope.goTour = function () {
         $location.path("/createTournament");

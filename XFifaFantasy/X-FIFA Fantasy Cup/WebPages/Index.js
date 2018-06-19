@@ -527,7 +527,7 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
         });
 });
 
-//Tournament Subscription controller//////////////////////////////////////
+//Tournament Subscription Fanstasy controller//////////////////////////////////////
 login.controller("subTournament", function ($scope, $rootScope, $location, $http) {
     $scope.playerSearch;
 
@@ -535,14 +535,36 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     $scope.tempP = [{ "player_id": "1", "player_name": "Cristiano Ronaldo", "player_country": "Germany", "position": "Forward", "statistics": null, "price": 30 }, { "player_id": "2", "player_name": "Keylor Navas", "player_country": "Costa Rica", "position": "Goaly", "statistics": null, "price": 20 }];
     
 
-    $scope.selectCountry = $scope.tempC;
+    $scope.selectCountry;
+
+    $http.get(Host + "/api/Country/countries").
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.selectCountry = mydata;
+
+        });
+
     $scope.showList = [];
 
     $scope.displayList = function () {
-        $scope.showList = $scope.tempP;
+
+        $http.post(Host + "/api/country/players", {
+            "country_id": $scope.searchProv.Name,
+            "player_active": 1
+
+        }).
+            then((promise) => {
+                let mydata = promise.data;
+                $scope.showList = mydata;
+            });
     }
 
-    $scope.addPlayer = function () {
+    $scope.addPlayer = function (thePlayer) {
+        <h3>Price: {{ playerPrice }}</h3>
+        <h3>Name: {{ playerName }}</h3>
+        <h3>Country: {{ playerCountry }}</h3>
+        <h3>Playing position: {{ playerPosition }}</h3>
+        <h3>Statistics: {{ playerStatistics }}</h3>
 
     }
 
@@ -551,6 +573,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 });
 
+//Tournament Subscription Championship controller//////////////////////////////////////
 login.controller("predictions", function ($scope, $rootScope, $location, $http) {
     //$scope.temp = [{ "team1": "Germany", "team2": "England", "id1": "1", "id2": "2", "IDM": "1" }, { "team1": "Costa Rica", "team2": "Belguim", "id1": "3", "id2": "4", "IDM": "2" }];
     //$scope.temp2 = [{ "team1": "Italy", "team2": "USA", "id1": "1", "id2": "2", "IDM": "1" }, { "team1": "Panama", "team2": "China", "id1": "3", "id2": "4", "IDM": "2" }];
@@ -582,7 +605,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
         
         if ($scope.iteratorM < ($scope.matchList.length - 1)) {
             var currentJson = $scope.matchList[$scope.iteratorM];
-            var tempJson = { "match_id": currentJson.IDM, "txc_team1": currentJson.id1, "txc_team2": currentJson.id2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.name_team_1, "txc_team2": currentJson.name_team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
             $scope.resultList.push(tempJson);
             $scope.iteratorM += 1;
             $scope.result1 = 0;
@@ -592,7 +615,7 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
         }
         else {
             var currentJson = $scope.matchList[$scope.iteratorM];
-            var tempJson = { "match_id": currentJson.IDM, "txc_team1": currentJson.id1, "txc_team2": currentJson.id2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.name_team_1, "txc_team2": currentJson.name_team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
             $scope.resultList.push(tempJson);
 
             $http.post(Host + "/api/user/sendpredictions", {

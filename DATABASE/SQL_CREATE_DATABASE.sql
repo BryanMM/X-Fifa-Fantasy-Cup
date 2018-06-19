@@ -153,7 +153,9 @@ CREATE TABLE match(
 	match_score_1 int default(0),
 	match_score_2 int default(0),
 	txc_team_1 int foreign key references tournamentxcountry(tournamentxcountry_id),
-	txc_team_2 int foreign key references tournamentxcountry(tournamentxcountry_id)
+	txc_team_2 int foreign key references tournamentxcountry(tournamentxcountry_id),
+	winner_name varchar(255),
+	winner_id int
 );
 
 

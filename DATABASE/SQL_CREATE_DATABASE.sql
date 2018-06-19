@@ -37,7 +37,8 @@ CREATE TABLE player(
 	player_team VARCHAR(30) NOT NULL,
 	player_price float NOT NULL,
 	player_active BIT NOT NULL,
-	player_photo varchar(max) NOT NULL
+	player_photo varchar(max) NOT NULL,
+	player_grade int default(0)
 );
 
 CREATE TABLE playerxposition(

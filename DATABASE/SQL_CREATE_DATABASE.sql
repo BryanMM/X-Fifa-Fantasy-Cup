@@ -111,7 +111,8 @@ CREATE TABLE playerxinfo(
 create table tournament(
 	tournament_id int identity(1,1) primary key not null,
 	tournament_name varchar(255) not null,
-	sponsor_id int foreign key references sponsor(sponsor_id)
+	sponsor_id int foreign key references sponsor(sponsor_id),
+	tournament_available int default(0)
 );
 
 create table playerxstats(

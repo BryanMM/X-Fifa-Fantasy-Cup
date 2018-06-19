@@ -13,59 +13,7 @@
                     </div>
                     <div id="{{cont.tournament_name}}" class="panel-collapse collapse in">
                         <div>
-                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.matches" ng-value="sel">{{sel.match_name}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!------------------------------------------------------------------>
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse1">
-                                Tournament 1 <span class="glyphicon glyphicon-log-in" ng-click="subTournament()" style="cursor:pointer; color: red; float: right;"> Subscribe</span>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
-                        <div>
-                            <button type="button" class="btn btn-basic btn-block">Match 10/22/2018</button>
-                            <button type="button" class="btn btn-basic btn-block">Match 10/22/2018</button>
-                            <button type="button" class="btn btn-basic btn-block">Match 10/22/2018</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse2">
-                                Tournament 2
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse">
-                        <div class="btn-group">
-                            <button>Match 10/22/2018</button>
-                            <button>Match 10/22/2018</button>
-                            <button>Match 10/22/2018</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" data-target="#collapse3">
-                                Tournament 3
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="btn-group">
-                            <button>Match 10/22/2018</button>
-                            <button>Match 10/22/2018</button>
-                            <button>Match 10/22/2018</button>
+                            <button type="button" class="btn btn-default btn-block" ng-repeat="sel in cont.matches" ng-value="sel" ng-click="openNaration(sel)">{{sel.match_name}}</button>
                         </div>
                     </div>
                 </div>
@@ -73,7 +21,15 @@
 
         </div>
         <div class="col-md-9">
-            <h3>Naración</h3>
+            <div ng-show="naration">
+                <div class="col-md-4">
+                    <h3>match</h3>
+                    <h4>player1 score VS score player2</h4>
+                    <h4>Location:</h4>
+                    <h4>Date:</h4>
+                    <button type="button" class="btn btn-lg btn-warning">LIVE!</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

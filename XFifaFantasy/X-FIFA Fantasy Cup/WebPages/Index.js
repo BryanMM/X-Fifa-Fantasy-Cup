@@ -179,6 +179,7 @@ login.controller("register", function ($scope, $rootScope, $location, $http) {
 //UserCalendar controller////////////////////////////////
 login.controller("userCalendar", function ($scope, $rootScope, $location, $http) {
     $rootScope.showItem = true;
+    $scope.naration = false;
 
     $scope.tournament;
     $http.get(Host + "/api/tournament/gettournaments").
@@ -187,6 +188,10 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
             $scope.tournament = mydata;
 
         });
+
+    $scope.openNaration = function (place) {
+        $scope.naration = true;
+    }
 
     $scope.subTournament = function (theId) {
         TourSub = theId.tournament_id;
@@ -217,7 +222,6 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.name = true;
     $scope.teams = false;
     $scope.matches = false;
-    $scope.stages = false;
     var tourID = "";
 
     //Names Configuration/////////////////////////////////////////////
@@ -508,16 +512,13 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     
 
     $scope.goStages = function () {
-        $scope.matches = false;
-        $scope.stages = true;
+        $http.post(Host + "/api/Tournament/finishtour", {
+            tournament_id: tourID
+        }).
+            then((promise) => {
+                $location.path("/adminCalendar");
+            });
 
-    }
-
-
-    //Stages configuration//////////////////////////////////////////////
-    $scope.addMatch = function () {
-        tempvs = $scope.team1 + " vs " + $scope.team2;
-        $scope.matchList.push(tempvs);
     }
 
 });

@@ -19,7 +19,7 @@ namespace X_FIFA_Fantasy_Cup.Models
         public string fanatic_password { get; set; }
         public string fanatic_description { get; set; }
         public int fanatic_country { get; set; }
-        public bool fanatic_active { get; set; }
+        public int fanatic_active { get; set; }
         
 
     }

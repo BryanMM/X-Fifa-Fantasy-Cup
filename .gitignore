@@ -6,9 +6,10 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+C:\Users\fabri\source\repos\X-Fifa-Fantasy-Cup\XFifaFantasy\X-FIFA Fantasy Cup\*.config
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+
 
 # Build results
 [Dd]ebug/
@@ -261,4 +262,7 @@ __pycache__/
 *.pyc
 *.rpt
 
+XFifaFantasy/X-FIFA Fantasy Cup/Web.config
+XFifaFantasy/X-FIFA Fantasy Cup/Web.config
+*.config
 XFifaFantasy/X-FIFA Fantasy Cup/Web.config

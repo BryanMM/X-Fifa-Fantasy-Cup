@@ -353,7 +353,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     $scope.showMatch = [];
     
     $scope.yearlist = [];
-    for (i = 2017; i >= 1900; i--) {
+    for (i = 2022; i >= 2018; i--) {
         $scope.yearlist.push(i);
     }
     $scope.monthlist = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];

@@ -9,7 +9,7 @@ namespace X_FIFA_Fantasy_Cup.Models
     {
         public string powerup_name { get; set; }
         public int powerup_id { get; set; }
-        public bool powerup_unique { get; set; }
+        public int powerup_unique { get; set; }
         public int powerup_selection { get; set; }
         public int sponsor_id { get; set; }
         public int powerup_type_id { get; set; }

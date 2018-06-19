@@ -15,9 +15,6 @@ namespace X_FIFA_Fantasy_Cup.Controllers
 {
     public class TournamentController : ApiController
     {
-
-
-
         [HttpGet]
         [ActionName("gettournaments")]
         public JsonResult<List<Tournament>> tournaments()
@@ -230,8 +227,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             myConnection.Open();
             SqlCommand sqlCmd = new SqlCommand("insertadminmatch", myConnection);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            System.Diagnostics.Debug.WriteLine(DateTime.Parse(match.match_date));
-            sqlCmd.Parameters.Add(new SqlParameter("@match_date", Convert.ToDateTime(match.match_date)));
+            sqlCmd.Parameters.Add(new SqlParameter("@match_date", match.match_date));
             sqlCmd.Parameters.Add(new SqlParameter("@match_location", match.match_location));
             sqlCmd.Parameters.Add(new SqlParameter("@stage_id", match.stage_id));
             sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
@@ -257,10 +253,46 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
 
         }
+        [HttpPost]
+        [ActionName("GetStage")]
+        public JsonResult<Match> getstage(Match match)
+        {
+            Match constructor = new Match();
+            SqlConnection myConnection = new SqlConnection();
+            myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            System.Diagnostics.Debug.WriteLine("cargo base");
+            myConnection.Open();
+            if (match.stage_id > 1)
+            {
+                SqlCommand sqlCmd = new SqlCommand("getnextstage", myConnection);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+                System.Diagnostics.Debug.WriteLine(DateTime.Parse(match.match_date));
+                sqlCmd.Parameters.Add(new SqlParameter("@next_stage", match.stage_id));
+                sqlCmd.Parameters.Add(new SqlParameter("@tournament_id", match.tournament_id));
+                var returnparam = new SqlParameter { ParameterName = "@result", Direction = ParameterDirection.ReturnValue };
+                sqlCmd.Parameters.Add(returnparam);
+                sqlCmd.ExecuteNonQuery();
+                int result = (int)returnparam.Value;
+                sqlCmd.ExecuteNonQuery();
+                SqlDataReader dr = sqlCmd.ExecuteReader();
+                // System.Diagnostics.Debug.WriteLine();
+               while (dr.Read())
+                {
+                    constructor.match_id =(int) dr[""] ;
+                    constructor.detail_type = (string)dr["user_type"].ToString();
+                    constructor.detail_xinfo = (string)dr["user_login"].ToString();
+                    constructor.detail_status = (string)dr["user_active"].ToString();
+                }
+            }
+            else
+            {
+
+            }
+
+        }
 
 
 
-            
 
 
 

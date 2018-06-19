@@ -85,7 +85,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             sqlCmd.Parameters.Add(new SqlParameter("@f_email", fanatic.fanatic_email));
             sqlCmd.Parameters.Add(new SqlParameter("@f_phone", fanatic.fanatic_phone));
             System.Diagnostics.Debug.WriteLine("FECHAAAA="+fanatic.fanatic_password);
-            sqlCmd.Parameters.Add(new SqlParameter("@f_birth", Convert.ToDateTime(fanatic.fanatic_birth, new CultureInfo("ru-RU"))));
+            sqlCmd.Parameters.Add(new SqlParameter("@f_birth", fanatic.fanatic_birth));
             sqlCmd.Parameters.Add(new SqlParameter("@f_password", fanatic.fanatic_password));
             
             sqlCmd.Parameters.Add(new SqlParameter("@f_about", fanatic.fanatic_description));
@@ -202,7 +202,7 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                     DateTime datetmp = (DateTime)reader["fanatic_date_create"];   
                     result.fanatic_name = (string)reader["fanatic_name"];
                     result.fanatic_last_name = (string)reader["fanatic_last_name"];
-                    //result.fanatic_birth = reader["fanatic_birth"].ToString();
+                    result.fanatic_birth = (string)reader["fanatic_birth"];
                     result.fanatic_date_create = datetmp.ToString("dd-mm-yyyy hh:mm");
                     result.fanatic_description = (string)reader["fanatic_description"];
                     result.fanatic_email = (string)reader["fanatic_email"];
@@ -222,13 +222,13 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                 var reader = sqlCmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    DateTime datetmp = (DateTime)reader["fanatic_date_create"];
+                    DateTime datetmp = (DateTime)reader["admin_date_create"];
                     result.fanatic_name = (string)reader["admin_name"];
                     result.fanatic_last_name = (string)reader["admin_last_name"];
-                    //result.fanatic_birth = reader["fanatic_birth"].ToString();
+                    result.fanatic_birth = (string)reader["fanatic_birth"];
                     result.fanatic_date_create = datetmp.ToString("dd-mm-yyyy hh:mm");                    
                     result.fanatic_email = (string)reader["admin_email"];
-                    result.fanatic_id = (string)reader["admin_username"];
+                    result.fanatic_login = (string)reader["admin_username"];
                 }
                 myConnection.Close();
                 return Json(result);

@@ -71,18 +71,19 @@ create procedure insertplayer
 	@p_name varchar(30),
 	@p_lastname varchar(30),
 	@p_birthdate varchar(255),
-	@p_height int,
-	@p_weight int,
+	@p_height float,
+	@p_weight float,
 	@p_team	 varchar(30),
-	@p_price int,
+	@p_price float,
 	@p_active bit,
 	@p_photo varchar(max),
 	@p_position int,
-	@p_country int
+	@p_country int,
+	@p_grade int = 0
 as begin
 	declare @variable int;
 	begin try
-		insert into player values(@p_passport, @p_name,@p_lastname,@p_birthdate,@p_height,@p_weight,@p_team,@p_price,@p_active,@p_photo);
+		insert into player values(@p_passport, @p_name,@p_lastname,@p_birthdate,@p_height,@p_weight,@p_team,@p_price,@p_active,@p_photo,@p_grade);
 		insert into playerxinfo(country_id,playerxposition_id,player_id) values(@p_country,@p_position,@p_passport);
 		set @variable = 1
 	end try
@@ -328,7 +329,7 @@ as begin
 	while exists(select * from #temp)
 		begin
 			select top 1 @t_1 = team_1,@t_2=team_2,@match = match_id from #temp;
-			update @table set name_time_1 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id and txc.tournamentxcountry_id = @t_1) where match_id = @match and txc.tournamentxcountry_id = @t_1;
+			update @table set name_team_1 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id and txc.tournamentxcountry_id = @t_1) where match_id = @match and txc.tournamentxcountry_id = @t_1;
 			update @table set name_team_2 = ctr.country_name from tournamentxcountry as txc left outer join country as ctr on (txc.country_id = ctr.country_id and txc.tournamentxcountry_id = @t_2) where match_id = @match and txc.tournamentxcountry_id = @t_2;
 			delete from #temp where match_id = @match;
 		end

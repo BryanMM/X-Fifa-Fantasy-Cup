@@ -399,8 +399,8 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                 "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
                 "stage_id": "1",
-                "txc_team1": $scope.selectCountId[it1],
-                "txc_team2": $scope.selectCountId[it2],
+                "txc_team_1": $scope.selectCountId[it1],
+                "txc_team_2": $scope.selectCountId[it2],
                 "sxm_winner1" : "",
                 "sxm_winner2" : "",
                 "match_number": matchNumb
@@ -537,6 +537,11 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.selectCountry;
 
+    $scope.selectMidfielder = [];
+    $scope.selectGoalkeeper = [];
+    $scope.selectForward = [];
+    $scope.selectFullback = []
+
     $http.get(Host + "/api/Country/countries").
         then((promise) => {
             let mydata = promise.data;
@@ -549,7 +554,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     $scope.displayList = function () {
 
         $http.post(Host + "/api/country/players", {
-            "country_id": $scope.searchProv.Name,
+            "country_id": $scope.searchProv.Id,
             "player_active": 1
 
         }).
@@ -559,13 +564,50 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
             });
     }
 
+    $scope.selectedPlayer;
+    $scope.listPlayer = [];
+
     $scope.addPlayer = function (thePlayer) {
-        
+        $scope.playerName = thePlayer.player_name;
+        $scope.playerPrice = thePlayer.price;
+        $scope.playerPosition = thePlayer.position;
+        $scope.playerStatistics = thePlayer.statistics;
+        $scope.playerCountry = $scope.searchProv.Name;
+        $scope.selectedPlayer = thePlayer;
 
     }
 
+    $scope.insertPlayer = function () {
+        $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
+        if ($scope.selectedPlayer.position === "Goalkeeper") {
+            $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
+        }
+        else if ($scope.selectedPlayer.position === "Midfielder") {
+            $scope.selectMidfielder.push($scope.selectedPlayer.player_name);
+
+        }
+        else if ($scope.selectedPlayer.position === "Forward") {
+            $scope.selectForward.push($scope.selectedPlayer.player_name);
+
+        }
+        else {
+            $scope.selectFullback.push($scope.selectedPlayer.player_name);
+        }
+    }
+
     $scope.goPrediction = function () {
-        $location.path("/predictions");
+        $http.post(Host + "/api/country/players", {
+            "userxinfo_id": UserInfo,
+            "tournament_id": TourSub,
+            "players": $scope.listPlayer
+
+        }).
+            then((promise) => {
+                if (promise.data.success === "true") {
+
+                    $location.path("/predictions");
+                }
+            });
     }
 });
 
@@ -601,7 +643,17 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
         
         if ($scope.iteratorM < ($scope.matchList.length - 1)) {
             var currentJson = $scope.matchList[$scope.iteratorM];
-            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.name_team_1, "txc_team2": currentJson.name_team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            var winName, winId;
+            if ($scope.result1 >= $scope.result2) {
+                winName = currentJson.name_team_1;
+                winId = currentJson.team_1;
+
+            }
+            else {
+                winName = currentJson.name_team_2;
+                winId = currentJson.team_2;
+            }
+            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.team_1, "txc_team2": currentJson.team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2, "winner_name": winName, "winner_id": winId };
             $scope.resultList.push(tempJson);
             $scope.iteratorM += 1;
             $scope.result1 = 0;
@@ -611,7 +663,16 @@ login.controller("predictions", function ($scope, $rootScope, $location, $http) 
         }
         else {
             var currentJson = $scope.matchList[$scope.iteratorM];
-            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.name_team_1, "txc_team2": currentJson.name_team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            if ($scope.result1 >= $scope.result2) {
+                winName = currentJson.name_team_1;
+                winId = currentJson.team_1;
+
+            }
+            else {
+                winName = currentJson.name_team_2;
+                winId = currentJson.team_2;
+            }
+            var tempJson = { "match_id": currentJson.match_id, "txc_team1": currentJson.team_1, "txc_team2": currentJson.team_2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2, "winner_name": winName, "winner_id": winId };
             $scope.resultList.push(tempJson);
 
             $http.post(Host + "/api/user/sendpredictions", {

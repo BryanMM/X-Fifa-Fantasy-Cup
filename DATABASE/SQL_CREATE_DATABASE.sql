@@ -32,10 +32,10 @@ CREATE TABLE player(
 	player_name VARCHAR(30) NOT NULL,
 	player_last_name VARCHAR(30) NOT NULL,
 	player_birth varchar(255) NOT NULL,
-	player_height INT NOT NULL,
-	player_weight INT NOT NULL,
+	player_height float NOT NULL,
+	player_weight float NOT NULL,
 	player_team VARCHAR(30) NOT NULL,
-	player_price INT NOT NULL,
+	player_price float NOT NULL,
 	player_active BIT NOT NULL,
 	player_photo varchar(max) NOT NULL
 );

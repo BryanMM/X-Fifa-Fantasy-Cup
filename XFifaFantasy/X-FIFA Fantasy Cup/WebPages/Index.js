@@ -313,6 +313,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
     }
 
     var xmatchId = [];
+    var listLength;
 
     $scope.goMatches = function () {
 
@@ -332,6 +333,7 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                 if (promise.data.success === "true") {
                     $scope.teams = false;
                     $scope.matches = true;
+                    listLength = $scope.selectCountry.length;
                     xmatchId = promise.data.tournamentxcoutnry_id
                 }
             });
@@ -382,11 +384,11 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
 
 
     $scope.availableCountry = $scope.selectCountry;
-    var listLength = $scope.selectCountry.length;
-    console.log(listLength);
+    
     $scope.winnerList = [];
 
     $scope.addFight = function () {
+        console.log(listLength);
         console.log($scope.country);
         var i;
         var flag = false;
@@ -462,19 +464,22 @@ login.controller("createTour", function ($scope, $rootScope, $location, $http) {
                 check2 = $scope.availableCountry[it2];
                 
             }
-            console.log($scope.availableCountry);
+            
             console.log(it1);
             console.log(listLength);
             var tempid = {};
             var tempid2 = {};
-            tempid = $scope.winnerList[listLength - it1];
-            tempid2 = $scope.winnerList[listLength - it2];
+            tempid = $scope.winnerList[it1 - listLength];
+            tempid2 = $scope.winnerList[it2 - listLength];
+
+            console.log(tempid);
+            console.log(tempid2);
 
             $http.post(Host + "/api/tournament/addmatch", {
                 "tournament_id": tourID,
                 "match_date": $scope.year.concat("-", $scope.month, "-", $scope.day, " 5:5:5"),
                 "match_location": $scope.location,
-                "stage_id": tempid["snum"] + 1,
+                "stage_id": tempid["snum"],
                 "txc_team1": "",
                 "txc_team2": "",
                 "sxm_winner1": tempid["id"],

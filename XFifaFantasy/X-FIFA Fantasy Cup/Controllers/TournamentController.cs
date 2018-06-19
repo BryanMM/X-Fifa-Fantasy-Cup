@@ -279,12 +279,12 @@ namespace X_FIFA_Fantasy_Cup.Controllers
             }
 
         }
-        
+        /*
         [HttpPost]
         [ActionName("GetStage")]
         public JsonResult<AdminMatch> getstage(AdminMatch match)
         {
-            Match constructor = new Match();
+            AdminMatch constructor = new AdminMatch();
             SqlConnection myConnection = new SqlConnection();
             myConnection.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             System.Diagnostics.Debug.WriteLine("cargo base");
@@ -306,15 +306,17 @@ namespace X_FIFA_Fantasy_Cup.Controllers
                while (dr.Read())
                 {
                     constructor.match_id =(int) dr["match_id"] ;
-                    constructor. = (string)dr["user_type"].ToString();
-                    constructor.detail_xinfo = (string)dr["user_login"].ToString();
-                    constructor.detail_status = (string)dr["user_active"].ToString();
+                    constructor.name_team_1 = (string)dr["name_team_1"];
+                    constructor.name_team_2 = (string)dr["name_team_2"];
+                    constructor.team_1 = (string)dr["team_1"];
+                    constructor.team_2 = (string)dr["team_2"];
                 }
             }
             else
             {
 
             }
+            */
             
 
         }

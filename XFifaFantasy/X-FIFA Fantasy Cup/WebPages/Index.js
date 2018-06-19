@@ -39,6 +39,10 @@ login.config(function ($routeProvider) {
         .when("/subscribe", {
             templateUrl: "User/SubTournament.html",
             controller: "subTournament"
+        })
+        .when("/predictions", {
+            templateUrl: "User/PredictTournament.html",
+            controller: "predictions"
         });
 });
 
@@ -62,7 +66,7 @@ login.controller("userLogin", function ($scope, $rootScope, $location, $http) {
     }
     $scope.goLogin = function () {
         
-       //$location.path("/userCalendar");
+       $location.path("/userCalendar");
         
        $http.post(Host + "/api/user/login", { username: $scope.usr, password: $scope.pswrd }).
             then((promise) => {
@@ -177,7 +181,6 @@ login.controller("userCalendar", function ($scope, $rootScope, $location, $http)
     $rootScope.showItem = true;
 
     $scope.tournament;
-    console.log("HOLA");
     $http.get(Host + "/api/tournament/gettournaments").
         then((promise) => {
             console.log("ADIOS");
@@ -511,8 +514,6 @@ login.controller("userProfile", function ($scope, $rootScope, $location, $http) 
     }).
         then((promise) => {
             let mydata = promise.data;
-            console.log("test");
-            console.log(mydata);     
             $scope.fname = mydata.fanatic_name;
             $scope.lname = mydata.fanatic_last_name;
             $scope.ucountry = mydata.fanatic_country;
@@ -542,6 +543,89 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.addPlayer = function () {
+
+    }
+
+    $scope.goPrediction = function () {
+        $location.path("/predictions");
+    }
+});
+
+login.controller("predictions", function ($scope, $rootScope, $location, $http) {
+    //$scope.temp = [{ "team1": "Germany", "team2": "England", "id1": "1", "id2": "2", "IDM": "1" }, { "team1": "Costa Rica", "team2": "Belguim", "id1": "3", "id2": "4", "IDM": "2" }];
+    //$scope.temp2 = [{ "team1": "Italy", "team2": "USA", "id1": "1", "id2": "2", "IDM": "1" }, { "team1": "Panama", "team2": "China", "id1": "3", "id2": "4", "IDM": "2" }];
+
+    $scope.currentStage = 1;
+
+    $http.post(Host + "/api/tournament/getstage", {
+        "tournament_id": TourSub,
+        "stage_id": 1
+
+    }).
+        then((promise) => {
+            let mydata = promise.data;
+            $scope.matchList = mydata;
+        });
+
+    $scope.resultList = [];
+    $scope.iteratorM = 0;
+
+    $scope.matchList = $scope.temp;
+    $scope.result1 = 0;
+    $scope.result2 = 0;
+    $scope.player1 = $scope.matchList[0].name_team_1;
+    $scope.player2 = $scope.matchList[0].name_team_2;
+
+    
+
+    $scope.subData = function () {
+        
+        if ($scope.iteratorM < ($scope.matchList.length - 1)) {
+            var currentJson = $scope.matchList[$scope.iteratorM];
+            var tempJson = { "match_id": currentJson.IDM, "txc_team1": currentJson.id1, "txc_team2": currentJson.id2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            $scope.resultList.push(tempJson);
+            $scope.iteratorM += 1;
+            $scope.result1 = 0;
+            $scope.result2 = 0;
+            $scope.player1 = $scope.matchList[$scope.iteratorM].team1;
+            $scope.player2 = $scope.matchList[$scope.iteratorM].team2;
+        }
+        else {
+            var currentJson = $scope.matchList[$scope.iteratorM];
+            var tempJson = { "match_id": currentJson.IDM, "txc_team1": currentJson.id1, "txc_team2": currentJson.id2, "userxscore_score1": $scope.result1, "userxscore_score2": $scope.result2 };
+            $scope.resultList.push(tempJson);
+
+            $http.post(Host + "/api/user/sendpredictions", {
+                "userxinfo_id": UserInfo,
+                "matches": $scope.resultList
+
+            }).
+                then((promise) => {
+                });
+
+            if ($scope.matchList.length === 1){
+                $location.path("userCalendar");
+            }
+            else { 
+                $scope.currentStage += 1;
+
+                $http.post(Host + "/api/tournament/getstage", {
+                    "tournament_id": TourSub,
+                    "stage_id": $scope.currentStage
+
+                }).
+                    then((promise) => {
+                        let mydata = promise.data;
+                        $scope.matchList = mydata;
+                    });
+
+                $scope.result1 = 0;
+                $scope.result2 = 0;
+                $scope.iteratorM = 0;
+                $scope.player1 = $scope.matchList[$scope.iteratorM].team1;
+                $scope.player2 = $scope.matchList[$scope.iteratorM].team2;
+            }
+        }
 
     }
 });

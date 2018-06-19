@@ -618,9 +618,11 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
 
     $scope.insertPlayer = function () {
 
-        if (($scope.budget - parseFloat($scope.selectedPlayer.player_price)) >= 0) {
+        if (($scope.budget - $scope.selectedPlayer.player_price) >= 0) {
+
             $scope.listPlayer.push($scope.selectedPlayer.playerxinfo_id);
-            $scope.budget -= parseFloat($scope.selectedPlayer.price);
+            $scope.budget = $scope.budget - $scope.selectedPlayer.player_price;
+            
             if ($scope.selectedPlayer.position === "Goalkeeper") {
                 $scope.selectGoalkeeper.push($scope.selectedPlayer.player_name);
             }
@@ -642,8 +644,7 @@ login.controller("subTournament", function ($scope, $rootScope, $location, $http
     }
 
     $scope.goPrediction = function () {
-        //////////////////////////////// EDITAR URL
-        $http.post(Host + "/api/country/players", {
+        $http.post(Host + "/api/user/sendfantasy", {
             "userxinfo_id": UserInfo,
             "tournament_id": TourSub,
             "players": $scope.listPlayer
